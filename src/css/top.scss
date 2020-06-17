@@ -1,0 +1,82 @@
+.top {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 56px;
+  padding: 10px;
+  color: #fff;
+
+  .nav-lk {
+    width: 30%;
+    height: 100%;
+
+    .logo-wrap {
+      width: 70px;
+      display: inline-block;
+      margin-top: 5px;
+
+      .icon {
+        font-size: 30px;
+      }
+    }
+
+    .box {
+      position: relative;
+      float: right;
+      width: 56px;
+      height: 36px;
+      overflow: hidden;
+
+      .scroll {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 300%;
+        animation: up 5s ease infinite;
+        overflow: hidden;
+
+        .text {
+          text-align: center;
+          line-height: 36px;
+          font-size: 18px;
+        }
+
+        .text,
+        img {
+          height: 36px;
+        }
+      }
+    }
+  }
+
+  &.query {
+    position: fixed;
+    background: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+    color: #444;
+  }
+}
+
+@keyframes up {
+  0%,
+  20% {
+    transform: translateY(0);
+  }
+
+  40%,
+  60% {
+    transform: translateY(-36px);
+  }
+
+  80%,
+  99.99% {
+    transform: translateY(-72px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}

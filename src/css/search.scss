@@ -1,0 +1,65 @@
+.search-wrap {
+  width: 587px;
+  height: 44px;
+  margin: 10px auto;
+
+  .lk {
+    float: left;
+    width: 131px;
+    height: 100%;
+    line-height: 44px;
+    text-align: center;
+
+    .icon-bili {
+      font-size: 30px;
+    }
+
+    .bar,
+    .text {
+      color: #00a1d6;
+    }
+
+    .bar {
+      margin-left: 6px;
+    }
+
+    .text {
+      margin-left: 2px;
+    }
+  }
+
+  .search-bd {
+    width: 430px;
+    float: left;
+    margin-left: 26px;
+
+    .search {
+      height: 18px;
+      box-shadow: none;
+      padding: 11px 15px;
+      background: transparent;
+      width: 296px;
+      border: 2px solid #ccd0d7;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    .btn {
+      cursor: pointer;
+      float: right;
+      color: #eee;
+      background: #00a1d6;
+      font-size: 16px;
+      letter-spacing: 2px;
+      line-height: 42px;
+      text-align: center;
+      width: 90px;
+      border-radius: 4px;
+      transition: color 0.5;
+
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+}

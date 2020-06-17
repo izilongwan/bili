@@ -1,0 +1,59 @@
+.pagination {
+  text-align: center;
+
+  .page-list {
+    display: inline-block;
+  }
+
+  .points {
+    margin: 0 5px;
+  }
+
+  .disabled-btn,
+  .cur-page,
+  .forward-btn,
+  .backward-btn,
+  .page-btn {
+    display: inline-block;
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  .disabled-btn {
+    cursor: not-allowed;
+  }
+
+  .forward-btn,
+  .backward-btn {
+    cursor: pointer;
+    background-color: #eee;
+
+    &:hover {
+      color: #000;
+      background-color: #f5f5f5;
+    }
+  }
+
+  .page-btn {
+    cursor: pointer;
+
+    &:hover {
+      color: #000;
+      box-shadow: 0 0 6px 1px #ddd;
+    }
+  }
+
+  .disabled-btn {
+    background-color: #ddd;
+    color: #999;
+  }
+
+  .cur-page {
+    background-color: #4fc3f7;
+    color: #fff;
+    font-weight: bold;
+  }
+}

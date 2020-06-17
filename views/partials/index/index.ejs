@@ -1,0 +1,64 @@
+<div class="container">
+
+  <% const { carousel, side, bangumi, cinema, promote, origin, rookie, full, e_sports, live } = data %>
+
+  <%- include('../../partials/common/header/index') %>
+
+  <%- include('../../partials/common/top', { className: '' }) %>
+
+  <%- include('../../partials/index/first/index', {
+    carousel: carousel.slice(0, 5),
+    side
+  }) %>
+
+  <%- include('../../partials/common/board/index', {
+    data: promote,
+    title: '推广',
+    field: 'promote'
+  }) %>
+
+  <%- include('../../partials/common/board/index', {
+    data: e_sports,
+    title: '电竞赛事',
+    field: 'e_sports'
+  }) %>
+
+  <%- include('../../partials/common/board/index', {
+    data: live,
+    title: '直播ing',
+    field: 'live'
+  }) %>
+
+
+  <%- include('../../partials/common/board/index', {
+    data: full,
+    title: '站点',
+    field: 'full'
+  }) %>
+
+  <%- include('../../partials/common/board/index', {
+    data: bangumi,
+    title: '新番',
+    field: 'bangumi'
+  }) %>
+
+  <%- include('../../partials/common/board/index', {
+    data: origin,
+    title: '原创相关',
+    field: 'origin'
+  }) %>
+
+  <%- include('../../partials/common/board/index', {
+    data: cinema,
+    title: '影视',
+    field: 'cinema'
+  }) %>
+
+  <%- include('../../partials/common/board/index', {
+    data: rookie,
+    title: '新人',
+    field: 'rookie'
+  }) %>
+
+  <%- include('../../partials/common/footer') %>
+</div>

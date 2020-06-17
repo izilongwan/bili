@@ -1,0 +1,27 @@
+.container {
+  position: relative;
+  width: 1340px;
+  margin: 0 auto;
+  overflow: hidden;
+
+  .hide {
+    display: none;
+  }
+
+  .content-wrap.query {
+    margin-top: 60px;
+    overflow: hidden;
+  }
+
+  .icon-bili {
+    color: #29b6f6;
+  }
+}
+
+.clearfix::after {
+  content: '';
+  display: block;
+  clear: both;
+  height: 0;
+  overflow: hidden;
+}

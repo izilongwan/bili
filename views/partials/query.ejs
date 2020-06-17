@@ -1,0 +1,33 @@
+<div class="container">
+
+  <% const { data, count } = res %>
+
+  <%- include('common/top', { className: 'query' })  %>
+
+  <div class="content-wrap query">
+
+    <%- include('common/search', { NAV, curIdx }) %>
+
+    <%- include('common/nav/index', { NAV, curIdx }) %>
+
+    <%- include('common/no-data-tip', { count, kw }) %>
+    <%- include('common/not-found', { count, kw }) %>
+
+    <%- include('common/board/index', {
+      data: data.slice(0, 48),
+      title: '',
+      field: '',
+    }) %>
+
+  </div>
+
+  <%- include('common/pagination', { count }) %>
+
+  <%- include('common/loading') %>
+
+  <%- include('common/footer') %>
+</div>
+
+<div style="display: none;" id="J_query-data">
+  <%= JSON.stringify(data) %>
+</div>

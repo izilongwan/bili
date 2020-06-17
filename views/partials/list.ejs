@@ -1,0 +1,63 @@
+<div class="container">
+
+  <% const { data, count } = res %>
+
+  <%- include('common/header/index') %>
+
+  <%- include('common/top', { className: '' }) %>
+
+  <%- include('common/nav/index', { NAV }) %>
+
+  <div class="content-wrap">
+
+    <%- include('common/no-data-tip', { count, kw: apiName }) %>
+    <%- include('common/not-found', { count, kw: apiName }) %>
+
+    <% if (field === 'cinema' || field === 'bangumi') { %>
+    <%- include('common/board/index', {
+      data,
+      title: '',
+      field: '',
+      type: 'item-four',
+      icon: '',
+      isUpShow: field === 'promote'
+    }) %>
+
+    <% } else if (field === 'e_sports') { %>
+    <%- include('common/board/index', {
+      data,
+      title: '',
+      field: '',
+      type: 'item-three',
+      icon: '',
+      isUpShow: field === 'promote'
+    }) %>
+
+    <% } else if (field === 'live') { %>
+    <%- include('common/board/index', {
+      data,
+      title: '',
+      field: '',
+      type: 'item-two',
+      icon: '',
+      isUpShow: field === 'promote'
+    }) %>
+
+    <% } else { %>
+    <%- include('common/board/index', {
+      data,
+      title: '',
+      field: '',
+      type: 'item-one',
+      icon: '',
+      isUpShow: field === 'promote'
+    }) %>
+    <% } %>
+  </div>
+
+  <%- include('common/pagination', { count }) %>
+
+  <%- include('common/loading') %>
+
+  <%- include('common/footer') %>
+</div>

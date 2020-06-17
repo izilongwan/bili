@@ -1,0 +1,36 @@
+.nav {
+  position: relative;
+  background: url('../imgs/wave.svg');
+  background-size: 100% 120px;
+  $color: #5c6bc0;
+
+  .item {
+    float: left;
+    width: 100px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    font-size: 16px;
+    font-family: 'MaShanZheng';
+    cursor: pointer;
+    transition: color 0.5s;
+
+    &.cur {
+      color: $color;
+      font-weight: bold;
+    }
+
+    &:hover {
+      color: $color;
+    }
+  }
+
+  .icon {
+    position: absolute;
+    bottom: 0;
+    left: 40px;
+    color: $color;
+    font-size: 20px;
+    transition: transform 0.5s;
+  }
+}

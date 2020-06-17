@@ -1,0 +1,13 @@
+<nav class="nav J_nav <%= NAV.length > 0 ? '' : 'hide' %>">
+  <ul class="list clearfix">
+
+    <% NAV.forEach((item, idx) => { %>
+
+    <%- include('item', { item, idx, curIdx }) %>
+
+    <% }) %>
+
+  </ul>
+
+  <span class="icon J_bar iconfont icon-hot1"></span>
+</nav>

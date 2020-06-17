@@ -1,0 +1,1 @@
+import '../css/notFound.scss'

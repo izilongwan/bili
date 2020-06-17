@@ -1,0 +1,11 @@
+<% for (let i = 0; i < carousel.length; i++) { %>
+<% const { img, alt, href } = carousel[i] %>
+
+<li class="car-item <%= !i ? 'active' : '' %>">
+
+  <a href="<%= href %>" target="_blank" class="car-lk">
+    <img class="car-img" data-src="<%= img %> " src="/imgs/lazy.gif" alt="<%= alt %>" title="<%= alt %>" />
+  </a>
+</li>
+
+<% } %>

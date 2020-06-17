@@ -1,0 +1,312 @@
+@import 'mixins.scss';
+
+.board {
+  margin-top: 10px;
+  $hover-color: #039be5;
+
+  &.hide {
+    display: none;
+  }
+
+  & > .title {
+    line-height: 60px;
+    font-size: 20px;
+    font-family: 'ZhiMangXing';
+
+    .icon {
+      font-size: 25px;
+
+      &.icon-promote {
+        color: #fb8c00;
+      }
+
+      &.icon-e_sports {
+        color: #913755;
+      }
+
+      &.icon-live {
+        color: #ec407a;
+      }
+
+      &.icon-full {
+        color: #7b4b86;
+      }
+
+      &.icon-origin {
+        color: #80008044;
+      }
+
+      &.icon-bangumi {
+        color: rgb(187, 14, 115);
+      }
+
+      &.icon-cinema {
+        color: yellowgreen;
+      }
+    }
+
+    .more {
+      float: right;
+      font-size: 12px;
+      color: #999;
+
+      &:hover {
+        color: $hover-color;
+      }
+
+      .iconfont {
+        vertical-align: middle;
+        font-size: 12px;
+      }
+    }
+  }
+
+  .img-scale {
+    transition: transform 0.5s;
+    transform: scale(1.05);
+  }
+
+  .item {
+    position: relative;
+    min-width: 180px;
+    max-width: 210px;
+    width: 23%;
+    float: left;
+    margin: 0 16px 16px 0;
+    padding-bottom: 10px;
+
+    .animate {
+      transition: color 0.5s;
+    }
+
+    &:hover {
+      box-shadow: 0 0 15px 2px #ccc;
+    }
+
+    &:last-child,
+    &:nth-of-type(6n) {
+      margin-right: 0;
+    }
+
+    .img-wrap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+
+      .count-wrap {
+        position: absolute;
+        left: 5px;
+        bottom: 5px;
+        color: #fff;
+        font-size: 12px;
+
+        .icon {
+          margin-left: 10px;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .cell {
+      position: relative;
+
+      &::after {
+        content: '';
+        display: block;
+        padding-bottom: 62.5%;
+      }
+
+      &:hover {
+        .title,
+        & + .info .title {
+          color: $hover-color;
+        }
+
+        img {
+          @extend .img-scale;
+        }
+      }
+    }
+
+    .info {
+      position: relative;
+      margin: 8px 3px 0;
+
+      .title {
+        @include ellipsis-m(2);
+        @extend .animate;
+        margin-top: 5px;
+        line-height: 18px;
+        height: 36px;
+
+        &:hover {
+          color: $hover-color;
+        }
+      }
+    }
+
+    &.item-one {
+      .info {
+        .up-wrap {
+          @extend .animate;
+          display: block;
+          margin-top: 8px;
+          color: #999;
+          font-size: 13px;
+
+          &:hover {
+            color: $hover-color;
+          }
+
+          .up {
+            border: 1px solid;
+            border-radius: 5px;
+            padding: 0 2px;
+            font-size: 10px;
+          }
+        }
+      }
+    }
+
+    &.item-two {
+      .cell {
+        .count {
+          font-size: 12px;
+        }
+
+        &:hover + .info .title {
+          color: $hover-color;
+        }
+      }
+
+      .info {
+        .img-wrap {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          overflow: hidden;
+        }
+
+        .intro {
+          padding: 0 3px 0 50px;
+          font-size: 14px;
+
+          .up-name {
+            @include ellipsis;
+            display: block;
+          }
+
+          .title {
+            @extend .animate;
+            @include ellipsis-m(2);
+            display: block;
+            margin-top: 8px;
+            height: 30px;
+            font-size: 12px;
+            line-height: 15px;
+            color: #666;
+
+            &:hover {
+              color: $hover-color;
+            }
+          }
+
+          .tag {
+            margin-top: 8px;
+            color: #999;
+            font-size: 12px;
+          }
+        }
+      }
+    }
+
+    &.item-three {
+      .cell {
+        .two {
+          display: none;
+        }
+
+        &:hover {
+          .one {
+            display: none;
+          }
+
+          .two {
+            display: block;
+          }
+        }
+      }
+    }
+
+    &.item-four {
+      height: 147px;
+      padding-bottom: 0;
+
+      .lk {
+        height: 100%;
+
+        &:hover {
+          img {
+            @extend .img-scale;
+          }
+
+          .info .title {
+            color: $hover-color;
+          }
+        }
+
+        .img-wrap {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 110px;
+          height: 100%;
+        }
+
+        .info {
+          padding: 3px 3px 0 118px;
+          margin: 0;
+          height: 100%;
+
+          .title {
+            margin-top: 0;
+            color: #000;
+
+            &:hover {
+              color: $hover-color;
+            }
+          }
+
+          .tip {
+            @include ellipsis;
+            margin: 8px 0;
+            color: yellowgreen;
+            font-size: 12px;
+          }
+
+          .count,
+          .tags {
+            font-size: 12px;
+            line-height: 18px;
+            color: #666;
+          }
+
+          .tags {
+            margin-top: 3px;
+            color: #999;
+          }
+
+          .icon-danmu {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+}

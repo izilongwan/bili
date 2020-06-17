@@ -1,0 +1,60 @@
+@import 'mixins.scss';
+
+.first {
+  position: relative;
+  margin-top: 20px;
+  height: 240px;
+  overflow: hidden;
+
+  .my-carousel {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .side-wrap {
+    padding-left: 570px;
+
+    .list {
+      .item {
+        position: relative;
+        float: left;
+        width: 185px;
+        margin: 0 10px 10px 0;
+
+        &:nth-of-type(4n) {
+          margin-right: 0;
+        }
+
+        &:nth-of-type(n + 4) {
+          margin-bottom: 0;
+        }
+
+        .img-wrap {
+          overflow: hidden;
+        }
+
+        .text {
+          @include ellipsis-m(2);
+          position: absolute;
+          bottom: 5px;
+          left: 5px;
+          color: #ddd;
+          transition: color 0.5s;
+          line-height: 15px;
+        }
+
+        &:hover {
+          img {
+            transition: transform 0.5s;
+            transform: scale(1.05);
+          }
+
+          .text {
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+}
