@@ -67,7 +67,8 @@ const query = async (ctx) => {
       CONF: query,
       res: {
         data: [],
-        count: 0
+        count: 0,
+        countArr: []
       },
       field,
       NAV,

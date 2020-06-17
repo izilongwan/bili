@@ -1,9 +1,9 @@
-<nav class="nav J_nav <%= NAV.length > 0 ? '' : 'hide' %>">
-  <ul class="list clearfix">
+<nav class="nav">
+  <ul class="list J_nav clearfix" data-count-arr="<%= countArr.toString() %>">
 
     <% NAV.forEach((item, idx) => { %>
 
-    <%- include('item', { item, idx, curIdx }) %>
+    <%- include('item', { item, idx, curIdx, count: countArr[idx] }) %>
 
     <% }) %>
 

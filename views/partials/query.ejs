@@ -1,6 +1,6 @@
 <div class="container">
 
-  <% const { data, count } = res %>
+  <% const { data, count, countArr } = res %>
 
   <%- include('common/top', { className: 'query' })  %>
 
@@ -8,7 +8,7 @@
 
     <%- include('common/search', { NAV, curIdx }) %>
 
-    <%- include('common/nav/index', { NAV, curIdx }) %>
+    <%- include('common/nav/index', { NAV, curIdx, countArr }) %>
 
     <%- include('common/no-data-tip', { count, kw }) %>
     <%- include('common/not-found', { count, kw }) %>

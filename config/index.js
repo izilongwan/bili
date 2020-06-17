@@ -1,7 +1,9 @@
 const { REDIS_CONF } = require('./db')
 
 const isProd = process.env.NODE_ENV === 'production' ? true : false,
-      BASE_URL = isProd ? 'http://bili.hlhs.store/' : 'http://localhost:8080/';
+      BASE_URL = isProd
+        ? 'http://bili.hlhs.store/'
+        : 'http://localhost:8080/';
 
 module.exports = {
   SESSION_INFO: {
@@ -138,22 +140,23 @@ module.exports = {
 
   QUERY: [
     { field: 'carousel', apiName: 'getDataCarousel' },
-    { field: 'promote', apiName: 'getDataPromote' },
-    { field: 'e_sports', apiName: 'getDataESports' },
-    { field: 'live', apiName: 'getDataLive' },
     { field: 'full', apiName: 'getDataFull' },
+    { field: 'promote', apiName: 'getDataPromote' },
+    { field: 'live', apiName: 'getDataLive' },
+    { field: 'e_sports', apiName: 'getDataESports' },
     { field: 'origin', apiName: 'getDataOrigin' },
+    { field: 'rookie', apiName: 'getDataRookie'},
     { field: 'bangumi', apiName: 'getDataBangumi' },
     { field: 'cinema', apiName: 'getDataCinema' },
-    { field: 'rookie', apiName: 'getDataRookie'},
   ],
 
    SEARCH_NAV : [
     { field: '*', text: '全部' },
+    { field: 'full', text: '全站' },
     { field: 'promote', text: '推广' },
     { field: 'live', text: '直播' },
-    { field: 'origin', text: '原创' },
     { field: 'e_sports', text: '电竞赛事' },
+    { field: 'origin', text: '原创' },
     { field: 'rookie', text: '新人' },
     { field: 'bangumi', text: '新番' },
     { field: 'cinema', text: '影视' },

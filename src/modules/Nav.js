@@ -1,12 +1,12 @@
 import decorator from '../utils/decorator'
-import { FIELDS } from '../config'
 
 @decorator
 class Nav {
-  constructor (wrap, field, callback = () => {}) {
+  constructor (wrap, nav, field, callback = () => {}) {
     this.oNav = document.querySelector(wrap);
     this.oBar = document.querySelector('.J_bar');
-    this.oItems = this.oNav.querySelectorAll('.item');
+    this.oItems = Array.from(this.oNav.getElementsByClassName('item'));
+    this.nav = nav;
     if (this.oItems.length <= 0) {
       return;
     }
@@ -32,21 +32,27 @@ class Nav {
   onNavClick (ev) {
     const e = ev || window.event,
           tar = e.target || e.srcElement,
-          { field } = tar.dataset;
+          oLi = findParent(tar);
+
+    if (!oLi) {
+      return;
+    }
+
+    const { field } = oLi.dataset;
 
     if (field !== this.field) {
-      this.setCurItem(tar, field);
+      this.setCurItem(oLi, field);
     }
   }
 
   getIdx (field) {
-    return FIELDS.findIndex(item => item.field == field);
+    return this.nav.findIndex(item => item.field == field);
   }
 
   setCurItem (tar, field) {
     const { oItems, callback } = this;
 
-    oItems.forEach(item => item.classList.remove('cur'));
+    oItems.forEach(({ classList}) => classList.remove('cur'));
     tar.classList.add('cur');
     this.field = field;
     this.idx = [].indexOf.call(oItems, tar);
@@ -59,6 +65,14 @@ class Nav {
 
     oBar.style.transform = `translateX(${ idx * size }px)`;
   }
+}
+
+function findParent(el) {
+  while (el && el.tagName.toLowerCase() !== 'li') {
+    el = el.parentNode;
+  }
+
+  return el;
 }
 
 export default Nav;

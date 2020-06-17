@@ -22,10 +22,10 @@ import { FIELDS } from '../config'
 import { tplReplace, asyncFunc, imgLazyLoad } from '../utils/tools'
 import * as API from '../api'
 import Search from '../modules/Search'
-import itemOneTpl from '../templates/itemOne.tpl'
-import itemTwoTpl from '../templates/itemTwo.tpl'
-import itemThreeTpl from '../templates/itemThree.tpl'
-import itemFourTpl from '../templates/itemFour.tpl'
+import itemOneTpl from '../templates/board/itemOne.tpl'
+import itemTwoTpl from '../templates/board/itemTwo.tpl'
+import itemThreeTpl from '../templates/board/itemThree.tpl'
+import itemFourTpl from '../templates/board/itemFour.tpl'
 
 ;((doc, win) => {
   const dom = {
@@ -48,7 +48,7 @@ import itemFourTpl from '../templates/itemFour.tpl'
     data.field = getField();
     data.tpl = getTpl(data.field);
 
-    new Nav('.J_nav', data.field, onNavClick).init();
+    new Nav('.J_nav', FIELDS, data.field, onNavClick).init();
     new Search('.J_false-search-wrap', onSearchClick).init();
     renderPagination();
     imgLazyLoad();

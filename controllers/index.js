@@ -99,11 +99,12 @@ class Index {
     }
 
     if (apiName === '*') {
+
       const arr = apis.reduce((prev, { apiName }) =>
         prev.concat(prototype[apiName](query))
         , [])
 
-      const [err, res] = await utils.asyncFunc(
+      const [err, result] = await utils.asyncFunc(
         () => Promise.all(arr)
       );
 
@@ -111,7 +112,7 @@ class Index {
         return { code: -1, msg: err.message };
       }
 
-      const data = res.reduce((prev, cur, idx) => {
+      const data = result.reduce((prev, cur, idx) => {
         const { field } = apis[idx];
         cur.forEach(item =>
           item.setDataValue('field', field)
@@ -120,8 +121,11 @@ class Index {
       }, [])
 
       const count = data.length;
+      const countArr = result.map(item => item.length);
 
-      ctx.body = { ...INDEX.SUCCESS_GET, data: { data, count } };
+      countArr.unshift(count);
+
+      ctx.body = { ...INDEX.SUCCESS_GET, data: { data, countArr, count } };
       return;
     }
 

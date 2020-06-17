@@ -19,13 +19,14 @@ import '../css/search.scss'
 
 import Pagination from '../modules/Pagination'
 import * as API from '../api'
-import { tplReplace, imgLazyLoad, asyncFunc } from '../utils/tools'
+import { SEARCH_NAV } from '../config'
+import { tplReplace, imgLazyLoad, asyncFunc, getUrlParam } from '../utils/tools'
 import Nav from '../modules/Nav'
 import Search from '../modules/Search'
-import itemOneTpl from '../templates/itemOne.tpl'
-import itemTwoTpl from '../templates/itemTwo.tpl'
-import itemThreeTpl from '../templates/itemThree.tpl'
-import itemFourTpl from '../templates/itemFour.tpl'
+import itemOneTpl from '../templates/board/itemOne.tpl'
+import itemTwoTpl from '../templates/board/itemTwo.tpl'
+import itemThreeTpl from '../templates/board/itemThree.tpl'
+import itemFourTpl from '../templates/board/itemFour.tpl'
 
 ;((doc, win) => {
   const dom = {
@@ -34,28 +35,33 @@ import itemFourTpl from '../templates/itemFour.tpl'
     pagination: doc.querySelector('.J_pagination'),
     loading: doc.querySelector('.J_loading'),
     noDataTip: doc.querySelector('.J_no-data-tip'),
-    queryData: doc.querySelector('#J_query-data')
+    notFound: doc.querySelector('.J_not-found'),
+    queryData: doc.querySelector('#J_query-data'),
+    countArr: doc.querySelector('#J_query-count-arr')
   }
 
   dom.navFirstItem = dom.nav.querySelector('.item');
+  dom.navCounts = dom.nav.querySelectorAll('.count');
 
   const data = {
     allData: JSON.parse(dom.queryData.innerHTML),
+    countArr: dom.nav.dataset.countArr.split(','),
     cache: {},
     field: '*',
     apiName: '*',
     pageSize: 48,
-    curPage: 1
+    curPage: 1,
+    kw: getUrlParam('q')
   };
 
-  let nav = null;
+  let theNav = null;
 
   const init = () => {
     renderPagination();
     imgLazyLoad();
     bindEvent();
     setCacheData();
-    nav = new Nav('.J_nav', data.field, onNavClick).init();
+    theNav = new Nav('.J_nav', SEARCH_NAV, data.field, onNavClick).init();
     new Search('.J_search-bd', onSearchClick).init();
   }
 
@@ -106,13 +112,18 @@ import itemFourTpl from '../templates/itemFour.tpl'
   }
 
   const onSearchClick = (kw) => {
-    const { apiName } = data;
+    if (!kw) {
+      return;
+    }
 
-    getSearchData({ kw, apiName});
+    data.kw = kw;
+
+    getSearchData({ kw, apiName: '*'});
   }
 
   const onNavClick = (field) => {
     data.field = field;
+    data.curIdx = SEARCH_NAV.findIndex(item => item.field = field);
     data.curPage = 1;
     getCacheData(true);
   }
@@ -128,6 +139,9 @@ import itemFourTpl from '../templates/itemFour.tpl'
       ? classList.remove('hide')
       : classList.add('hide');
   }
+
+  const renderNavCount = (dom, countArr) =>
+    dom.forEach((item, idx) => item.textContent = `(${ countArr[idx] })`)
 
   const renderList = (data) =>
     data.reduce((prev, cur) =>
@@ -152,13 +166,14 @@ import itemFourTpl from '../templates/itemFour.tpl'
 
   const getCacheData = (isRenderPagination = true) => {
     const { field, cache, curPage } = data,
-          { board, loading, pagination, noDataTip } = dom,
+          { board, loading, pagination, noDataTip, notFound } = dom,
           item = cache[field];
 
     board.innerHTML = '';
     handleState(loading, true);
     handleState(pagination, false);
     handleState(noDataTip, false);
+    handleState(notFound, false);
 
     if (!item) {
       setCacheData();
@@ -176,20 +191,22 @@ import itemFourTpl from '../templates/itemFour.tpl'
   }
 
   const handleRender = (isRenderPagination) => {
-    const { field, cache, curPage } = data,
+    const { field, cache, curPage, kw, countArr, curIdx } = data,
           { data: _data, pages } = cache[field],
-          { noDataTip, loading, pagination } = dom;
+          { noDataTip, loading, pagination, notFound, board } = dom;
 
     if (pages <= 0) {
-      handleState(noDataTip, true);
+      kw ? handleState(noDataTip, true) : handleState(notFound, true);
       handleState(loading, false);
       return;
     }
 
-    dom.board.innerHTML = renderList(_data[curPage]);
+    board.innerHTML = renderList(_data[curPage]);
     isRenderPagination && renderPagination(curPage, pages);
+    handleState(board, true);
     handleState(pagination, true);
     handleState(noDataTip, false);
+    handleState(notFound, false);
     handleState(loading, false);
     imgLazyLoad();
   }
@@ -212,9 +229,14 @@ import itemFourTpl from '../templates/itemFour.tpl'
     if (code === 0) {
       data.cache = {};
       data.allData = result.data;
-      nav.setCurItem(dom.navFirstItem, '*');
+      data.countArr = result.countArr;
+
+      const { navFirstItem, navCounts } = dom;
+
+      theNav.setCurItem(navFirstItem, '*');
       setCacheData();
       handleState(loading, false);
+      renderNavCount(navCounts, result.countArr);
       return;
     }
 
