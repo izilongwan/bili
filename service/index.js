@@ -90,9 +90,9 @@ class Index {
     }
 
     const { count } = Index;
-    const { field} = QUERY.find(item => item.apiName === apiName);
+    const { field } = QUERY.find(item => item.apiName === apiName);
 
-    res.forEach(item => item.field = field);
+    res.forEach((item) => item.setDataValue('field', field));
 
     const data = {
       data: res,

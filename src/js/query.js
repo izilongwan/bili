@@ -45,7 +45,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
 
   const data = {
     allData: JSON.parse(dom.queryData.innerHTML),
-    countArr: dom.nav.dataset.countArr.split(','),
+    countArr: dom.nav.dataset.countArr.split(',') || [],
     cache: {},
     field: '*',
     apiName: '*',
@@ -63,6 +63,9 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     setCacheData();
     theNav = new Nav('.J_nav', SEARCH_NAV, data.field, onNavClick).init();
     new Search('.J_search-bd', onSearchClick).init();
+    handleState(dom.navCounts, true);
+    console.log(dom);
+
   }
 
   const bindEvent = () => {
@@ -134,10 +137,18 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     getCacheData(false);
   }
 
-  const handleState = ({ classList }, state) => {
-    state
-      ? classList.remove('hide')
-      : classList.add('hide');
+  const handleState = (dom, state) => {
+    if (dom.length) {
+      dom.forEach((item) => func(item));
+      return;
+    }
+    func(dom);
+
+    function func ({ classList }) {
+      state
+        ? classList.remove('hide')
+        : classList.add('hide')
+    }
   }
 
   const renderNavCount = (dom, countArr) =>
@@ -147,6 +158,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     data.reduce((prev, cur) =>
       prev += tplReplace(getTpl(cur.field),
         Object.assign({}, cur, {
+          isUpShow: cur.field === 'promote' ? '' : 'hide',
           countHide: cur.play_count ? '' : 'hide',
           tags: cur.tags && JSON.parse(cur.tags).join('、')
       })), '')

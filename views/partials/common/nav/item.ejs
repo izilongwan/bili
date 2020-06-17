@@ -3,7 +3,7 @@
 <li class="item <%= curIdx === idx ? 'cur' : '' %>" data-field="<%= field %>">
   <%= text %>
 
-  <% if (count >= 0) { %>
-  <span class="count">(<%= count %>)</span>
-  <% } %>
+  <span class="count <%= count ? '' : 'hide' %>">
+    (<%= count ? count : 0 %>)
+  </span>
 </li>

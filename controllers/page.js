@@ -71,7 +71,7 @@ const query = async (ctx) => {
         countArr: []
       },
       field,
-      NAV,
+      NAV: SEARCH_NAV,
       curIdx: -1,
       kw: q
     });

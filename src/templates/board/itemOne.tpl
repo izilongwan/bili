@@ -22,7 +22,7 @@
     </a>
 
     <a href="{{ up_href }}" class="up-wrap">
-      <span class="up">up</span>
+      <span class="up {{ isUpShow }}">up</span>
 
       <span class="name">{{ up_name }}</span>
     </a>

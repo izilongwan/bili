@@ -71,6 +71,9 @@ class Index {
     }
 
     const { count } = Index;
+    const { field } = QUERY.find(item => item.apiName === apiName);
+
+    data.forEach((item) => item.setDataValue('field', field));
     ctx.body = { ...INDEX.SUCCESS_GET, res: { data, count } };
   }
 
@@ -99,7 +102,6 @@ class Index {
     }
 
     if (apiName === '*') {
-
       const arr = apis.reduce((prev, { apiName }) =>
         prev.concat(prototype[apiName](query))
         , [])
@@ -114,6 +116,7 @@ class Index {
 
       const data = result.reduce((prev, cur, idx) => {
         const { field } = apis[idx];
+
         cur.forEach(item =>
           item.setDataValue('field', field)
         )
@@ -134,7 +137,7 @@ class Index {
       return;
     }
 
-    const [err, data] = await utils.asyncFunc(
+    const [err, res] = await utils.asyncFunc(
       () => prototype[apiName](query)
     );
 
@@ -142,8 +145,14 @@ class Index {
       return { code: -1, msg: err.message };
     }
 
-    const count = data.length;
-    ctx.body = { ...INDEX.SUCCESS_GET, data: { data, count } };
+    const count = res.length;
+    const { field } = apis.find(item => item.apiName === apiName);
+
+    res.forEach((item) => item.setDataValue('field', field));
+
+    const data = { data: res, count };
+
+    ctx.body = { ...INDEX.SUCCESS_GET, data };
   }
 
   async getDataFull (query) {

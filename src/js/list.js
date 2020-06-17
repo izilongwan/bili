@@ -158,6 +158,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     data.reduce((prev, cur) =>
       prev += tplReplace(tpl,
         Object.assign({}, cur, {
+          isUpShow: cur.field === 'promote' ? (console.log(cur), '') : 'hide',
           countHide: cur.play_count ? '' : 'hide',
           tags: cur.tags && JSON.parse(cur.tags).join('、')
       })), '')
@@ -221,6 +222,8 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
       handleState(loading, false);
       return;
     }
+
+    console.log(data);
 
     board.innerHTML = renderList(_data, data.tpl);
     isRenderPagination && renderPagination(curPage, pages);

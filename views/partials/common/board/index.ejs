@@ -1,29 +1,28 @@
 <div class="board">
+  <% const len = data.length %>
 
-  <% if (title) { %>
+  <% if (title && len) { %>
   <%- include('title', { title, field }) %>
   <% } %>
 
-  <ul class="list clearfix J_board-list <%= data.length > 0 ? '' : 'hide' %>">
+  <ul class="list clearfix J_board-list <%= len ? '' : 'hide' %>">
     <% data.forEach(item => { %>
 
-    <% const isUpShow = item.field === 'promote' %>
-
     <% if (field === 'cinema' || field === 'bangumi') { %>
-    <%- include('item-four', { item, isUpShow: false }) %>
+    <%- include('item-four', { item }) %>
 
     <% } else if (field === 'e_sports') { %>
-    <%- include('item-three', { item, isUpShow: false }) %>
+    <%- include('item-three', { item }) %>
 
     <% } else if (field === 'live') { %>
-    <%- include('item-two', { item, isUpShow: false }) %>
+    <%- include('item-two', { item }) %>
 
     <% } else { %>
-    <%- include('item-one', { item, isUpShow: false }) %>
+    <%const isUpShow = item.field === 'promote' %>
+    <%- include('item-one', { item, isUpShow }) %>
     <% } %>
 
     <% }) %>
-
   </ul>
 
 </div>
