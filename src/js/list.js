@@ -94,10 +94,16 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     }
   }
 
-  const onPaginationClick = (curPage, pages) => {
+  const onPaginationClick = (curPage, pages, render = false) => {
     data.curPage = curPage;
     win.scrollTo(0, 0);
-    getCacheData(false);
+    getCacheData(render);
+  }
+
+  const onPageSearchBtnClick = (page) => {
+    if (data.curPage !== page) {
+      onPaginationClick(page, data.pages, true);
+    }
   }
 
   const onNavClick = (field) => {
@@ -158,7 +164,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     data.reduce((prev, cur) =>
       prev += tplReplace(tpl,
         Object.assign({}, cur, {
-          isUpShow: cur.field === 'promote' ? (console.log(cur), '') : 'hide',
+          isUpShow: cur.field === 'promote' ? '' : 'hide',
           countHide: cur.play_count ? '' : 'hide',
           tags: cur.tags && JSON.parse(cur.tags).join('、')
       })), '')
@@ -169,7 +175,8 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     dom.pagination.innerHTML = '';
 
     new Pagination('.J_pagination', {
-      callback: onPaginationClick,
+      pageListClick: onPaginationClick,
+      pageSearchBtnClick: onPageSearchBtnClick,
       curPage,
       pages,
       pageSize
@@ -222,8 +229,6 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
       handleState(loading, false);
       return;
     }
-
-    console.log(data);
 
     board.innerHTML = renderList(_data, data.tpl);
     isRenderPagination && renderPagination(curPage, pages);

@@ -1,5 +1,6 @@
 .pagination {
   text-align: center;
+  $color: #4fc3f7;
 
   .page-list {
     display: inline-block;
@@ -22,6 +23,12 @@
     font-size: 16px;
   }
 
+  .disabled-btn,
+  .forward-btn,
+  .backward-btn {
+    width: 65px;
+  }
+
   .disabled-btn {
     cursor: not-allowed;
   }
@@ -35,6 +42,18 @@
       color: #000;
       background-color: #f5f5f5;
     }
+  }
+
+  .page-btn {
+    background-color: #fafafa;
+    box-shadow: 0 0 5px 1px #eee;
+  }
+
+  .cur-page + .disabled-btn,
+  .forward-btn,
+  .cur-page,
+  .page-btn {
+    margin-left: 8px;
   }
 
   .page-btn {
@@ -52,8 +71,42 @@
   }
 
   .cur-page {
-    background-color: #4fc3f7;
+    background-color: $color;
     color: #fff;
     font-weight: bold;
+  }
+
+  .page-search-wrap {
+    display: inline-block;
+    margin-left: 20px;
+    height: 45px;
+    border-radius: 22.5px;
+    background-color: #f6f6f6;
+
+    &:hover {
+      background-color: #f1f1f1;
+    }
+
+    .page-search {
+      width: 65px;
+      text-align: center;
+    }
+
+    .page-search-btn {
+      width: 45px;
+      height: 100%;
+      border-radius: 50%;
+      font-size: 18px;
+      transition: background-color 0.5s, color 0.5s;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $color;
+        color: #fff;
+        font-weight: bold;
+        font-size: 22px;
+        transition: font-size 0.5s;
+      }
+    }
   }
 }

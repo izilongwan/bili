@@ -64,8 +64,6 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     theNav = new Nav('.J_nav', SEARCH_NAV, data.field, onNavClick).init();
     new Search('.J_search-bd', onSearchClick).init();
     handleState(dom.navCounts, true);
-    console.log(dom);
-
   }
 
   const bindEvent = () => {
@@ -131,10 +129,16 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     getCacheData(true);
   }
 
-  const onPaginationClick = (curPage, pages) => {
+  const onPageSearchBtnClick = (page) => {
+    if (data.curPage !== page) {
+      onPaginationClick(page, data.pages, true);
+    }
+  }
+
+  const onPaginationClick = (curPage, pages, render = false) => {
     data.curPage = curPage;
     win.scrollTo(0, 0);
-    getCacheData(false);
+    getCacheData(render);
   }
 
   const handleState = (dom, state) => {
@@ -169,7 +173,8 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     dom.pagination.innerHTML = '';
 
     new Pagination('.J_pagination', {
-      callback: onPaginationClick,
+      pageListClick: onPaginationClick,
+      pageSearchBtnClick: onPageSearchBtnClick,
       curPage,
       pages,
       pageSize
