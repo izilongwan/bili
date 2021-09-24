@@ -1,7 +1,7 @@
 const seq = require('../db/mysql')
 const { TEXT, INTEGER, STRING } = require('sequelize');
 
-const Full = seq.define('full_rank', {
+const Movie = seq.define('movie', {
   img: {
     type: STRING,
     allowNull: false
@@ -17,27 +17,22 @@ const Full = seq.define('full_rank', {
     allowNull: false
   },
 
+  latest_tip: {
+    type: STRING,
+    allowNull: false
+  },
+
   play_count: {
     type: INTEGER,
     allowNull: false
   },
 
-  popup_count: {
+  fav_count: {
     type: INTEGER,
     allowNull: false
   },
 
-  up_name: {
-    type: STRING,
-    allowNull: false
-  },
-
-  up_href: {
-    type: STRING,
-    allowNull: false
-  },
-
-  score: {
+  popup_count: {
     type: INTEGER,
     allowNull: false
   },
@@ -50,6 +45,11 @@ const Full = seq.define('full_rank', {
     }
   },
 
+  score: {
+    type: INTEGER,
+    allowNull: false
+  },
+
   status: {
     type: INTEGER,
     defaultValue: 1
@@ -58,4 +58,4 @@ const Full = seq.define('full_rank', {
   underscored: true
 })
 
-module.exports = Full;
+module.exports = Movie;

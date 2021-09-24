@@ -1,7 +1,7 @@
 const seq = require('../db/mysql')
 const { TEXT, INTEGER, STRING } = require('sequelize');
 
-const ROOKIE = seq.define('rookie_rank', {
+const Rookie = seq.define('rookie', {
   img: {
     type: STRING,
     allowNull: false
@@ -58,4 +58,4 @@ const ROOKIE = seq.define('rookie_rank', {
   underscored: true
 })
 
-module.exports = ROOKIE;
+module.exports = Rookie;

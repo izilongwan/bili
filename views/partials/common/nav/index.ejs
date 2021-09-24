@@ -1,9 +1,16 @@
 <nav class="nav">
-  <ul class="list J_nav clearfix" data-count-arr="<%= countArr.toString() %>">
+  <ul class="list J_nav clearfix" data-count-arr="<%= '0' %>">
 
-    <% NAV.forEach((item, idx) => { %>
+    <% const { fieldsTotalObject, total } = data %> 
 
-    <%- include('item', { item, idx, curIdx, count: countArr[idx] }) %>
+    <% NAV.forEach((item, idx)=> { %>
+      <%- include('item', { 
+        item, 
+        curField: field, 
+        fieldTotal: fieldsTotalObject
+          ? fieldsTotalObject[item.field] || 0
+          : total
+      }) %>
 
     <% }) %>
 

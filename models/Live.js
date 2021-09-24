@@ -12,7 +12,7 @@ const Live = seq.define('live', {
     allowNull: false
   },
 
-  count: {
+  live_count: {
     type: STRING,
     allowNull: false
   },

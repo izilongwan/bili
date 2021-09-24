@@ -1,6 +1,40 @@
-const cp = require('child_process'),
-      { resolve } = require('path');
+const cp               = require('child_process'),
+      { resolve }      = require('path'),
+      { CRYTO_SECRET } = require('../config'),
+      crypto           = require('crypto'),
+      fs               = require('fs'),
+      path             = require('path'),
+      { COMMON }       = require('./codeInfo')
 
+const fsPromises = fs.promises
+
+const readDir = async (dir) => await fsPromises.readdir(__dirname + '/../' + dir)
+
+const formatFilename = (filename) => {
+  return filename
+    .replace(/\.js/, '')
+    .replace(/(\w)/g, (_, key, idx) => {
+      if (idx == 0) {
+        return key.toLowerCase()
+      }
+
+      if (key === key.toUpperCase()) {
+        return '_' + key.toLowerCase()
+      }
+
+      return key
+    })
+}
+
+const generateDirMap = async (dir) => {
+  const dirs = await readDir(dir)
+
+  return dirs.reduce((prev, curr) => {
+    prev[formatFilename(curr)] = require(__dirname + '/../' + dir +'/' + curr)
+
+    return prev;
+  }, {})
+}
 
 const makeCrypto = (str) => {
   const _md5 = crypto.createHash('md5'),
@@ -45,41 +79,86 @@ const uploadImg = (data) => {
   })
 }
 
-const updateModel = (Model, data) => {
+const createOrUpdateModel = (Model, data, customConf = {}) => {
+  const result = [];
+
   data.forEach(async item => {
-    const { c_id } = item,
-      conf = { where: { c_id } };
+    const { title, author_name } = item
+    const conf = {
+      where: {
+        title,
+      },
+      ...customConf,
+    };
 
-    const res = await Model.findOne(conf);
+    author_name && (conf.where.author_name = author_name)
 
-    if (res) {
-      await Model.update(item, conf);
-      return;
-    }
+    let ret = await Model.findOne(conf);
 
-    await Model.create(item);
+    ret = ret
+      ? await Model.update(item, conf)
+      : await Model.create(item)
+
+    result.push(ret)
   })
+
+  return result
 }
 
-const updateBiliModel = (Model, data) => {
-  data.forEach(async item => {
-    const { title, author_name } = item,
-          conf = {
-            where: {
-              title,
-              author_name
-            }
-          };
+const updateModelAndReturnRet = async (Model, updateData, conf) => {
+  const ret = await Model.update(updateData, conf)
 
-    const res = await Model.findOne(conf);
+  return ret[0] === 1
+    ? { ...COMMON.SUCCESS, data: await Model.findOne(conf) }
+    : COMMON.UPDATE_ERROR
+}
 
-    if (res) {
-      await Model.update(item, conf);
-      return;
+// 检查参数
+const checkParams = (obj = {}, ...params) => {
+  for (const key of params) {
+    if (obj[key] == undefined) {
+      return false
+    }
+  }
+
+  return true
+}
+
+const checkFileInfo = async (pathname, type = 'controllers/api') => {
+  const ret = {
+    exist: false,
+    module: null
+  };
+
+  const filename = path.resolve(__dirname, '../' + type + '/' + pathname + '.js')
+  console.log('🚀 ~ file: utils.js ~ line 134 ~ checkFileInfo ~ filename', filename)
+
+  try {
+    const err = await fsPromises.access(filename)
+
+    if (!err) {
+      ret.module = require(filename)
+      ret.exist = true
     }
 
-    await Model.create(item);
-  })
+  } catch (err) {
+    ret.info = err
+    console.log('🚀 ~ file: utils.js ~ line 120 ~ checkFileInfo ~ err', err)
+  }
+
+  return ret
+}
+
+function trimTxt(text) {
+  return text.replace(/[\n\s]/g, '')
+}
+
+function transferNum(numStr) {
+  if (numStr.includes('万')) {
+    return parseFloat(numStr) * 10000
+  }
+
+  return parseFloat(numStr)
 }
 
 module.exports = {
@@ -138,6 +217,14 @@ module.exports = {
   makeCrypto,
   asyncFunc,
   uploadImg,
-  updateModel,
-  updateBiliModel
+  createOrUpdateModel,
+  updateModelAndReturnRet,
+  checkParams,
+  checkFileInfo,
+  readDir,
+  generateDirMap,
+  trimTxt,
+  transferNum,
+  MODELS: generateDirMap('models'),
+  CRAWLERS: generateDirMap('crawler'),
 }

@@ -1,0 +1,11 @@
+<div class="record-wrap">
+  <ul class="list clearfix">
+
+    <% record.data.slice(0, 8).forEach(item=> { %>
+
+      <%- include('item', { item }) %>
+
+    <% }) %>
+
+  </ul>
+</div>

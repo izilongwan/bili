@@ -1,4 +1,4 @@
-<% for (let i = 0; i < carousel.length; i++) { %>
+<% for (let i = 0, len = carousel.length; i < len; i++) { %>
 <% const { img, alt, href } = carousel[i] %>
 
 <li class="car-item <%= !i ? 'active' : '' %>">

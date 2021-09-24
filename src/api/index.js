@@ -1,17 +1,16 @@
-import axios from 'axios'
+import { http } from '../utils/tools'
 import API from './config'
 
-export const getData = (data) =>
-  axios({
-    url: API.GET_DATA,
-    method: 'post',
-    data,
-  })
+const req = (method, params) => http({
+  url: API.COMMON_API,
+  method: 'post',
+  data: {
+    module: 'index',
+    method,
+    params: Object.assign({ filename: 'service' }, params)
+  }
+})
 
+export const getData = (params) => req('getData', params)
 
-export const getSerachData = (data) =>
-  axios({
-    url: API.GET_SEARCH_DATA,
-    method: 'post',
-    data,
-  })
+export const serachData = (params) => req('searchData', params)

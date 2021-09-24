@@ -1,47 +1,47 @@
 <div class="container">
 
-  <% const { data, count } = res %>
+  <% const { total } = data %>
 
   <%- include('common/header/index') %>
 
   <%- include('common/top', { className: '' }) %>
 
-  <%- include('common/nav/index', { NAV, curIdx, countArr: [] }) %>
+  <%- include('common/nav/index', { NAV, curIdx }) %>
 
   <div class="content-wrap">
 
-    <%- include('common/no-data-tip', { count, kw: apiName }) %>
-    <%- include('common/not-found', { count, kw: apiName }) %>
+    <%- include('common/no-data-tip', { total, kw: field }) %>
+    <%- include('common/not-found', { total, kw: field }) %>
 
-    <% if (field === 'cinema' || field === 'bangumi') { %>
-    <%- include('common/board/index', {
-      data,
-      title: '',
-      field: '',
-      type: 'item-four',
-      icon: '',
-      isUpShow: field === 'promote'
-    }) %>
+    <% if (field === 'movie' || field === 'bangumi') { %>
+      <%- include('common/board/index', {
+        data,
+        title: '',
+        field: '',
+        type: 'item-four',
+        icon: '',
+        isUpShow: field === 'promote'
+      }) %>
 
     <% } else if (field === 'e_sports') { %>
-    <%- include('common/board/index', {
-      data,
-      title: '',
-      field: '',
-      type: 'item-three',
-      icon: '',
-      isUpShow: field === 'promote'
-    }) %>
+      <%- include('common/board/index', {
+        data,
+        title: '',
+        field: '',
+        type: 'item-three',
+        icon: '',
+        isUpShow: field === 'promote'
+      }) %>
 
     <% } else if (field === 'live') { %>
-    <%- include('common/board/index', {
-      data,
-      title: '',
-      field: '',
-      type: 'item-two',
-      icon: '',
-      isUpShow: field === 'promote'
-    }) %>
+      <%- include('common/board/index', {
+        data,
+        title: '',
+        field: '',
+        type: 'item-two',
+        icon: '',
+        isUpShow: field === 'promote'
+      }) %>
 
     <% } else { %>
     <%- include('common/board/index', {
@@ -55,7 +55,7 @@
     <% } %>
   </div>
 
-  <%- include('common/pagination', { count }) %>
+  <%- include('common/pagination', { total }) %>
 
   <%- include('common/loading') %>
 

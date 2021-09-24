@@ -1,7 +1,7 @@
 const seq = require('../db/mysql')
 const { TEXT, INTEGER, STRING } = require('sequelize');
 
-const ORIGIN = seq.define('origin_rank', {
+const Bangumi = seq.define('bangumi', {
   img: {
     type: STRING,
     allowNull: false
@@ -17,7 +17,17 @@ const ORIGIN = seq.define('origin_rank', {
     allowNull: false
   },
 
+  latest_tip: {
+    type: STRING,
+    allowNull: false
+  },
+
   play_count: {
+    type: INTEGER,
+    allowNull: false
+  },
+
+  fav_count: {
     type: INTEGER,
     allowNull: false
   },
@@ -27,27 +37,20 @@ const ORIGIN = seq.define('origin_rank', {
     allowNull: false
   },
 
-  up_name: {
-    type: STRING,
-    allowNull: false
-  },
-
-  up_href: {
-    type: STRING,
-    allowNull: false
-  },
-
-  score: {
-    type: INTEGER,
-    allowNull: false
-  },
-
   tags: {
     type: TEXT,
     allowNull: false,
     set (val) {
       return this.setDataValue('tags', JSON.stringify(val));
-    }
+    },
+    // get (val) {
+    //   return JSON.parse(this.getDataValue(val));
+    // }
+  },
+
+  score: {
+    type: INTEGER,
+    allowNull: false
   },
 
   status: {
@@ -58,4 +61,4 @@ const ORIGIN = seq.define('origin_rank', {
   underscored: true
 })
 
-module.exports = ORIGIN;
+module.exports = Bangumi;

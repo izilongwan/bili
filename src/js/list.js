@@ -18,7 +18,7 @@ import '../css/noDataTip.scss'
 
 import Nav from '../modules/Nav'
 import Pagination from '../modules/Pagination'
-import { FIELDS } from '../config'
+import { SEARCH_NAV } from '../config'
 import { tplReplace, asyncFunc, imgLazyLoad } from '../utils/tools'
 import * as API from '../api'
 import Search from '../modules/Search'
@@ -48,7 +48,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     data.field = getField();
     data.tpl = getTpl(data.field);
 
-    new Nav('.J_nav', FIELDS, data.field, onNavClick).init();
+    new Nav('.J_nav', SEARCH_NAV, data.field, onNavClick).init();
     new Search('.J_false-search-wrap', onSearchClick).init();
     renderPagination();
     imgLazyLoad();
@@ -80,7 +80,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
       case 'e_sports':
         return itemThreeTpl;
 
-      case 'cinema':
+      case 'movie':
       case 'bangumi':
         return itemFourTpl
       default:
@@ -158,7 +158,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
   }
 
   const getApiName = (field) =>
-    FIELDS.find(item => item.field === field);
+    SEARCH_NAV.find(item => item.field === field);
 
   const renderList = (data, tpl) =>
     data.reduce((prev, cur) =>

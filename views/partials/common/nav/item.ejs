@@ -1,9 +1,9 @@
-<% const { field, text } = item %>
+<% const { field: itemField, text } = item %>
 
-<li class="item <%= curIdx === idx ? 'cur' : '' %>" data-field="<%= field %>">
+<li class="item <%= itemField === curField ? 'cur' : '' %>" data-field="<%= itemField %>">
   <%= text %>
 
-  <span class="count <%= count ? '' : 'hide' %>">
-    (<%= count ? count : 0 %>)
+  <span class="count <%= fieldTotal ? '' : 'hide' %>">
+    (<%= fieldTotal ? fieldTotal : 0 %>)
   </span>
 </li>

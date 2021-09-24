@@ -37,22 +37,26 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     noDataTip: doc.querySelector('.J_no-data-tip'),
     notFound: doc.querySelector('.J_not-found'),
     queryData: doc.querySelector('#J_query-data'),
-    countArr: doc.querySelector('#J_query-count-arr')
   }
 
   dom.navFirstItem = dom.nav.querySelector('.item');
   dom.navCounts = dom.nav.querySelectorAll('.count');
 
   const data = {
-    allData: JSON.parse(dom.queryData.innerHTML),
-    countArr: dom.nav.dataset.countArr.split(',') || [],
+    dataConf: JSON.parse(dom.queryData.innerHTML),
     cache: {},
-    field: '*',
-    apiName: '*',
-    pageSize: 48,
+    field: getUrlParam('field') || 'all',
+    pageSize: 20,
     curPage: 1,
     kw: getUrlParam('q')
   };
+
+  data.allData = data.dataConf.data
+  data.fieldsTotalObject = data.dataConf.fieldsTotalObject
+  data.originData = {
+    data: data.allData,
+    fieldsTotalObject: data.fieldsTotalObject
+  }
 
   let theNav = null;
 
@@ -78,17 +82,17 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
 
   const formatData = (arr, field) =>
     arr.reduce((prev, cur) => {
-      if (field === '*' || cur.field === field) {
-        const { data: _arr, pages } = prev;
-        const key = Math.ceil((pages + 1) / (data.pageSize));
+      if (field === 'all' || cur.field === field) {
+        const { data: _arr, total } = prev;
+        const key = Math.floor((total) / (data.pageSize));
 
         !_arr[key] && (_arr[key] = []);
         _arr[key].push(cur);
-        prev.pages++;
+        prev.total++;
       }
 
       return prev;
-    }, { data: [], pages: 0 })
+    }, { data: [], total: 0 })
 
   const getTpl = (field) => {
     switch (field) {
@@ -104,34 +108,35 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
       case 'e_sports':
         return itemThreeTpl;
 
-      case 'cinema':
+      case 'movie':
       case 'bangumi':
         return itemFourTpl
       default:
-        break;
+        return itemOneTpl;
     }
   }
 
   const onSearchClick = (kw) => {
     if (!kw) {
+      renderData(data.originData)
       return;
     }
 
     data.kw = kw;
 
-    getSearchData({ kw, apiName: '*'});
+    searchData({ kw, field: 'all' });
   }
 
   const onNavClick = (field) => {
     data.field = field;
-    data.curIdx = SEARCH_NAV.findIndex(item => item.field = field);
+    data.curIdx = SEARCH_NAV.findIndex(item => item.field == field);
     data.curPage = 1;
     getCacheData(true);
   }
 
   const onPageSearchBtnClick = (page) => {
     if (data.curPage !== page) {
-      onPaginationClick(page, data.pages, true);
+      onPaginationClick(page, data.total, true);
     }
   }
 
@@ -155,8 +160,14 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     }
   }
 
-  const renderNavCount = (dom, countArr) =>
-    dom.forEach((item, idx) => item.textContent = `(${ countArr[idx] })`)
+  const renderNavCount = (dom) => {
+    const { fieldsTotalObject } = data
+
+    dom.forEach((item, idx) => {
+      const field = item.parentNode.getAttribute('data-field')
+      item.textContent = `(${ fieldsTotalObject[field] })`
+    })
+  }
 
   const renderList = (data) =>
     data.reduce((prev, cur) =>
@@ -164,7 +175,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
         Object.assign({}, cur, {
           isUpShow: cur.field === 'promote' ? '' : 'hide',
           countHide: cur.play_count ? '' : 'hide',
-          tags: cur.tags && JSON.parse(cur.tags).join('、')
+          tags: cur.tags && JSON.parse(cur.tags),
       })), '')
 
   const renderPagination = (curPage, pages) => {
@@ -198,7 +209,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
       return;
     }
 
-    if (!item[curPage]) {
+    if (!item[curPage - 1]) {
       setCacheData();
       handleRender(isRenderPagination);
       return;
@@ -208,18 +219,18 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
   }
 
   const handleRender = (isRenderPagination) => {
-    const { field, cache, curPage, kw, countArr, curIdx } = data,
-          { data: _data, pages } = cache[field],
+    const { field, cache, curPage, kw } = data,
+          { data: _data, total } = cache[field],
           { noDataTip, loading, pagination, notFound, board } = dom;
 
-    if (pages <= 0) {
+    if (total <= 0) {
       kw ? handleState(noDataTip, true) : handleState(notFound, true);
       handleState(loading, false);
       return;
     }
 
-    board.innerHTML = renderList(_data[curPage]);
-    isRenderPagination && renderPagination(curPage, pages);
+    board.innerHTML = renderList(_data[curPage - 1]);
+    isRenderPagination && renderPagination(curPage, total);
     handleState(board, true);
     handleState(pagination, true);
     handleState(noDataTip, false);
@@ -228,13 +239,12 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     imgLazyLoad();
   }
 
-  const getSearchData = async (conf) => {
+  const searchData = async (conf) => {
     const { loading } = dom;
 
     handleState(loading, true);
-    const [err, res] = await asyncFunc(
-      () => API.getSerachData(conf)
-    )
+
+    const [err, res] = await API.serachData(conf)
 
     if (err) {
       console.log(err.message);
@@ -244,21 +254,24 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     const { code, msg, data: result } = res;
 
     if (code === 0) {
-      data.cache = {};
-      data.allData = result.data;
-      data.countArr = result.countArr;
-
-      const { navFirstItem, navCounts } = dom;
-
-      theNav.setCurItem(navFirstItem, '*');
-      setCacheData();
-      handleState(loading, false);
-      renderNavCount(navCounts, result.countArr);
+      renderData(result)
       return;
     }
 
     handleState(loading, false);
-    console.log(msg);
+  }
+
+  const renderData = (result) => {
+    data.cache = {};
+    data.allData = result.data;
+    data.fieldsTotalObject = result.fieldsTotalObject
+
+    const { navFirstItem, navCounts, loading } = dom;
+
+    theNav.setCurItem(navFirstItem, 'all');
+    setCacheData();
+    handleState(loading, false);
+    renderNavCount(navCounts);
   }
 
   init();

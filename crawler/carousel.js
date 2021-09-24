@@ -1,21 +1,20 @@
 const crawler = require('../libs/crawler');
 const { CRAWL_URL } = require('../config');
 
-crawler({
+module.exports = crawler({
   url: CRAWL_URL.index,
   callback () {
     const { $ } = window,
-          $item = $('.agency-big-banner-ul .agency-big-banner-li'),
+          $items = $('#reportFirst1 .item'),
           result = [];
 
-    $item.each((idx, val) => {
-      const $el = $(val),
-            $link = $el.find('.js-banner-btnqq'),
-            $img = $link.find('img');
+    $items.each((idx, val) => {
+      const $el   = $(val),
+            $link = $el.find('a'),
+            $img  = $link.find('img');
 
       const data = {
-        c_id: parseInt($link.attr('data-id')),
-        title: $link.attr('title'),
+        title: $img.attr('title') || $img.attr('alt'),
         href: $link.prop('href'),
         img: $img.prop('src')
       }

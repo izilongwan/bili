@@ -1,5 +1,5 @@
 <li class="item item-four">
-  <% const { href, popup_count, fav_count, play_count, title, img, tip, tags } = item %>
+  <% const { href, popup_count, fav_count, play_count, title, img, latest_tip, tags = '' } = item %>
 
   <a href="<%= href %>" target="_blank" class="lk">
     <div class="img-wrap">
@@ -9,7 +9,7 @@
     <div class="info">
       <h3 class="title"><%= title %> </h3>
 
-      <p class="tip"><%= tip %></p>
+      <p class="tip"><%= latest_tip %></p>
 
       <p class="play-count count">
         <i class="iconfont icon-play"></i>
@@ -26,7 +26,7 @@
         <span><%= popup_count %></span>
       </p>
 
-      <p class="tags"><%= tags && JSON.parse(tags).join('、') %></p>
+      <p class="tags"><%= tags && JSON.parse(tags) %></p>
     </div>
   </a>
 </li>

@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export const imgLazyLoad = ((win, doc) => {
 	var imageItem = null,
 			imagesLen = 0,
@@ -41,14 +43,21 @@ export const createElement = (tag, inner) => {
 }
 
 export const asyncFunc = async (fn) => {
-	try {
-		const { data} = await fn();
-		return [null, data];
+  try {
+    const { data: { retCode: code, retBody, retMsg: msg } } = await fn();
 
-	} catch (err) {
-		return [err, null];
-	}
+    if (code === 0) {
+      return [null, retBody]
+    }
+
+    return [{ code, msg }]
+  } catch (err) {
+    err.message && (err.msg = err.message)
+    return [err];
+  }
 }
+
+export const http = async (...args) => asyncFunc(() => axios(...args))
 
 export const elemPos = (el) => {
 	var pos = {

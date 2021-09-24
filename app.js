@@ -9,19 +9,24 @@ const session = require('koa-generic-session')
 const cors = require('koa2-cors')
 const koaStatic = require('koa-static')
 
-const index = require('./routes/index')
+const api = require('./routes/api')
 const page = require('./routes/page')
+
+const catchError = require('./middleware/catchError')
 
 const { SESSION_INFO, COOKIE_INFO, REDIS_INFO, CORS_ORIGIN } = require('./config');
 
 // error handler
 onerror(app)
 
+// 中间件处理错误
+app.use(catchError)
+
 app.use(cors({
   origin () {
     return CORS_ORIGIN;
   },
-  credentials: true
+  credentials: true // 允许跨域设置cookie，前端设置widthCredential
 }))
 
 // middlewares
@@ -41,6 +46,7 @@ app.use(views(__dirname + '/views', {
 
 app.keys = SESSION_INFO.keys;
 app.use(session({
+  httpOnly: true,
   key: SESSION_INFO.name,
   prefix: SESSION_INFO.prefix,
   cookie: COOKIE_INFO,
@@ -48,20 +54,21 @@ app.use(session({
 }))
 
 // logger
-// app.use(async (ctx, next) => {
-//   const start = new Date()
-//   await next()
-//   const ms = new Date() - start
-//   console.log(`${ ctx.method } ${ ctx.url } - ${ ms }ms`)
-// })
+app.use(async (ctx, next) => {
+  ctx.response.timeStart = Date.now()
+
+  await next()
+})
 
 // routes
-app.use(index.routes(), index.allowedMethods())
+app.use(api.routes(), api.allowedMethods())
    .use(page.routes(), page.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
 });
+
+app.listen(8000, () => console.log('running'))
 
 module.exports = app

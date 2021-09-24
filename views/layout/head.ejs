@@ -9,19 +9,19 @@
   <% const { css, meta, title } = CONF %>
 
   <% meta.forEach(({ name, content }) => { %>
-  <meta name="<%= name %>" content="<%= content %> " />
+    <meta name="<%= name %>" content="<%= content %>" />
   <% }) %>
 
 
   <% CONF.css.forEach(link => { %>
-  <link rel="stylesheet" href="<%= link %> " />
+    <link rel="stylesheet" href="<%= link %> " />
   <% }) %>
 
   <link rel="shortcut icon" href="/imgs/favicon.ico" type="image/x-icon">
 
   <script type="text/javascript">
     if ((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
-      window.location.href = "http://m.bili.hlhs.store"
+      // window.location.href = "http://m.bili.hlhs.store"
     }
   </script>
 

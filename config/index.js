@@ -1,21 +1,21 @@
 const { REDIS_CONF } = require('./db')
 
-const isProd = process.env.NODE_ENV === 'production' ? true : false,
+const isProd = process.env.NODE_ENV === 'development' ? false : true,
       BASE_URL = isProd
-        ? 'http://bili.hlhs.store/'
+        ? '/'
         : 'http://localhost:8080/';
 
 module.exports = {
   SESSION_INFO: {
     keys: ['QWERTYUIOPPOIUYTREWQ!@#$%^&'],
-    name: 'jsplus.sid',
-    prefix: 'jsplus.sess'
+    name: 'admin_bili.sid',
+    prefix: 'admin_bili.sess'
   },
 
   COOKIE_INFO: {
     path: '/',
     httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000
+    maxAge: 1000 * 60 * 30
   },
 
   REDIS_INFO: {
@@ -24,7 +24,7 @@ module.exports = {
 
   CRYTO_SECRET: '!@#$%^&*QWERT',
 
-  CORS_ORIGIN: 'http://localhost:5013',
+  CORS_ORIGIN: 'http://localhost:3001',
 
   OAUTH: {
     github: {
@@ -47,8 +47,12 @@ module.exports = {
   },
 
   CRAWL_URL: {
-    index: 'https://msiwei.ke.qq.com/#category=-1&tab=0',
-    course: 'https://msiwei.ke.qq.com/#tab=1&category=-1',
+    index: 'https://bilibili.com',
+    full: 'https://www.bilibili.com/v/popular/rank/all',
+    bangumi: 'https://www.bilibili.com/v/popular/rank/bangumi',
+    rookie: 'https://www.bilibili.com/v/popular/rank/rookie',
+    origin: 'https://www.bilibili.com/v/popular/rank/origin',
+    movie: 'https://www.bilibili.com/v/popular/rank/movie',
   },
 
   CONF: {
@@ -116,18 +120,8 @@ module.exports = {
     }
   },
 
-  FIELDS:  {
-    full: 'getDataFull',
-    origin: 'getDataOrigin',
-    bangumi: 'getDataBangumi',
-    cinema: 'getDataCinema',
-    rookie: 'getDataRookie',
-    live: 'getDataLive',
-    promote:'getDataPromote',
-    e_sports:'getDataESports',
-  },
-
   NAV: [
+    { text: '全部', field: 'all' },
     { text: '全站', field: 'full' },
     { text: '推广', field: 'promote' },
     { text: '直播', field: 'live' },
@@ -135,23 +129,58 @@ module.exports = {
     { text: '原创', field: 'origin' },
     { text: '新人', field: 'rookie' },
     { text: '新番', field: 'bangumi' },
-    { text: '影视', field: 'cinema' },
+    { text: '电影', field: 'movie' },
   ],
 
-  QUERY: [
-    { field: 'carousel', apiName: 'getDataCarousel' },
-    { field: 'full', apiName: 'getDataFull' },
-    { field: 'promote', apiName: 'getDataPromote' },
-    { field: 'live', apiName: 'getDataLive' },
-    { field: 'e_sports', apiName: 'getDataESports' },
-    { field: 'origin', apiName: 'getDataOrigin' },
-    { field: 'rookie', apiName: 'getDataRookie'},
-    { field: 'bangumi', apiName: 'getDataBangumi' },
-    { field: 'cinema', apiName: 'getDataCinema' },
+  CRAWLER_SETTINGS: [
+    {
+      title: '爬取所有数据',
+      field: 'all',
+    },
+    {
+      title: '轮播图数据',
+      field: 'carousel',
+    },
+    {
+      title: '日常记录数据',
+      field: 'record',
+    },
+    {
+      title: '推广数据',
+      field: 'promote',
+    },
+    {
+      title: '电竞赛事数据',
+      field: 'e_sports',
+    },
+    {
+      title: '直播ing数据',
+      field: 'live',
+    },
+    {
+      title: '全站榜数据',
+      field: 'full',
+    },
+    {
+      title: '原创榜数据',
+      field: 'origin',
+    },
+    {
+      title: '新番榜数据',
+      field: 'bangumi',
+    },
+    {
+      title: '电影榜数据',
+      field: 'movie',
+    },
+    {
+      title: '新人榜数据',
+      field: 'rookie',
+    },
   ],
 
    SEARCH_NAV : [
-    { field: '*', text: '全部' },
+    { field: 'all', text: '全部' },
     { field: 'full', text: '全站' },
     { field: 'promote', text: '推广' },
     { field: 'live', text: '直播' },
@@ -159,6 +188,6 @@ module.exports = {
     { field: 'origin', text: '原创' },
     { field: 'rookie', text: '新人' },
     { field: 'bangumi', text: '新番' },
-    { field: 'cinema', text: '影视' },
+    { field: 'movie', text: '电影' },
   ]
 }

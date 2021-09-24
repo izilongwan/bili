@@ -1,152 +1,75 @@
 module.exports = {
   COMMON: {
-    EMPTY_VALUE: {
-      code: 10001,
-      msg: 'The account or password is empty'
-    },
-    INVALID_ACCOUNT: {
-      code: 10002,
-      msg: 'The account is invalid'
-    },
-    NOT_EXIST: {
-      code: 10003,
-      msg: 'The user doesn\'t exist'
-    },
-    INVALID_ACCOUT_LENGTH: {
-      code: 10004,
-      msg: 'The account length is 5'
-    },
-    INVALID_PASSWORD_LENGTH: {
-      code: 10005,
-      msg: 'The password length is 5-20'
-    },
-    UNLOGIN_STATUS: {
-      code: 10006,
-      msg: 'This is unlogin status'
-    },
-    NO_DATA: {
-      code: 10007,
-      msg: 'The isn\'t data in database'
-    },
-    EMPTY_API_ANME: {
-      code: 10008,
-      msg: 'The api_name is empty'
-    },
-    INVALID_API_ANME: {
-      code: 10009,
-      msg: 'The api_name is invalid'
-    },
-    EMPTY_KW: {
-      code: 10010,
-      msg: 'The kw is invalid'
-    },
-    INVALID_KW: {
-      code: 10011,
-      msg: 'The kw is invalid'
-    },
-    LOGIN_STATUS: {
-      code: 0,
-      msg: 'This is login status'
-    },
-    LOGOUT_SUCCESS: {
-      code: 0,
-      msg: 'Logout success'
-    }
-  },
-
-  LOGIN: {
-    COMPARE_ERR: {
-      code: 20001,
-      msg: 'The account and password is not match'
+    OPERATE_DATABASE_ERROR: {
+      code: -2,
+      msg: 'Operate database error'
     },
     SUCCESS: {
       code: 0,
-      msg: 'Login success'
+      msg: 'success'
+    },
+    INVALID_PARAMS: {
+      code: 1100,
+      msg: 'The params is invalid'
+    },
+    ACCOUNT_EXISTS: {
+      code: 1101,
+      msg: 'The account exists'
+    },
+    ADD_ACCOUNT_FAILED: {
+      code: 1102,
+      msg: 'Create account failed'
+    },
+    INVALID_ACCOUNT_OR_PASSWORD: {
+      code: 1103,
+      msg: 'The account or password is invalid'
+    },
+    INVALID_CAPTCHA: {
+      code: 1104,
+      msg: 'The captcha is invalid'
+    },
+    DATA_NOT_FOUND: {
+      code: 1106,
+      msg: 'The data is not found'
+    },
+    UPDATE_ERROR: {
+      code: 1106,
+      msg: 'Update data error'
+    },
+    FIELD_NOT_EXIST: {
+      code: 1107,
+      msg: 'The field doesn\'t exist'
+    },
+    MODELS_NOT_EXIST: {
+      code: 1108,
+      msg: 'The model doesn"t exist'
+    },
+    DATA_QUERY_ERROR: {
+      code: 1109,
+      msg: 'The data query error'
+    },
+    CRAWLER_DATA_DOING: {
+      code: 1110,
+      msg: 'The crawling data now'
     }
   },
 
-  REGISTER: {
-    EXIST_ACCOUNT: {
-      code: 30001,
-      msg: 'The account has been exist'
+  ENTRY: {
+    MODULE_NOT_EXIST: {
+      retCode: 2001,
+      retMsg: 'The module doesn"t exist'
+    },
+    METHOD_NOT_EXIST: {
+      retCode: 2002,
+      retMsg: 'The method doesn"t exist'
+    },
+    NOU_LOGIN: {
+      retCode: -1,
+      retMsg: 'You are not logged'
     },
     SUCCESS: {
-      code: 0,
-      msg: 'Register success'
-    }
-  },
-
-  CRAWLER: {
-    FAILED: {
-      code: 40001,
-      msg: 'Crawl failed'
-    },
-    NOTHING: {
-      code: 40002,
-      msg: 'It is nothing in crawling'
-    },
-    EMPTY_API_ANME: {
-      code: 40003,
-      msg: 'The api_name is empty'
-    },
-    INVALID_API_ANME: {
-      code: 40004,
-      msg: 'The api_name is invalid'
-    },
-    SUCCESS_ONE: {
-      code: 0,
-      msg: 'Crawl data success'
-    },
-    SUCCESS_ALL: {
-      code: 0,
-      msg: 'Crawl all data success'
-    },
-    SUCCESS_TIME: {
-      code: 0,
-      msg: 'Crawl time update success'
-    }
-  },
-
-  INDEX: {
-    EMPTY_API_NAME: {
-      code: 50001,
-      msg: 'The api_name is empty'
-    },
-    INVALID_API_NAME: {
-      code: 50002,
-      msg: 'The api_name is invalid'
-    },
-    EMPTY_C_ID: {
-      code: 50003,
-      msg: 'The c_id is empty'
-    },
-    INVALID_C_ID: {
-      code: 50004,
-      msg: 'The c_id is invalid'
-    },
-    EMPTY_STATUS: {
-      code: 50005,
-      msg: 'The status is empty'
-    },
-    INVALID_STATUS: {
-      code: 50006,
-      msg: 'The status is invalid'
-    },
-    EMPTY_FIELD: {
-      code: 50007,
-      msg: 'The field is empty'
-    },
-    SUCCESS_GET: {
-      code: 0,
-      msg: 'The data get success'
-    },
-    SUCCESS_UPDATE_STATUS: {
-      code: 0,
-      msg: 'The data status update success'
-    },
-    SUCCESS_UPDATE_FIELD: {
-      code: 0,
-      msg: 'The data field update success'
+      retCode: 0,
+      retMsg: 'Success'
     }
   }
 }

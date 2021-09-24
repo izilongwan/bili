@@ -1,8 +1,8 @@
-const { resolve } = require('path'),
-  Uglify = require('uglifyjs-webpack-plugin'),
-  autoprefixer = require('autoprefixer'),
-  MiniCssExtractPlugin = require('mini-css-extract-plugin'),
-  OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const { resolve }             = require('path'),
+      Uglify                  = require('uglifyjs-webpack-plugin'),
+      autoprefixer            = require('autoprefixer'),
+      MiniCssExtractPlugin    = require('mini-css-extract-plugin'),
+      OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const config = {
   // mode: 'development',

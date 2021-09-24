@@ -1,0 +1,27 @@
+<% const { img, href, title, up_name, play_count }=item %>
+
+  <a href="<%= href %> " target="_blank" class="item">
+
+    <div class="img-wrap">
+      <img data-src="<%= img %> " src="/imgs/lazy.gif" alt="图片" />
+    </div>
+
+    <!-- 默认遮罩层 -->
+    <div class="mask-wrap-default"></div>
+
+    <!-- 文字遮罩层 -->
+    <div class="mask-wrap">
+      <p class="cell title">
+        <%= title %>
+      </p>
+      <p class="cell up-wrap">
+        <span class="up">up</span>
+        <span class="name">
+          <%= up_name %>
+        </span>
+      </p>
+      <p class="cell play">
+        <%= play_count %>播放
+      </p>
+    </div>
+  </a>
