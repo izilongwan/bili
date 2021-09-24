@@ -1,12 +1,12 @@
 {
-  "name": "crawler",
+  "name": "bili",
   "version": "0.1.0",
   "main": "app.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production pm2 start bin/www --name bili",
     "dev": "cross-env NODE_ENV=development nodemon app",
-    "webpack": "webpack-dev-server --host localhost --content-base app/public/ --hot --config webpack.config.js",
-    "build": "webpack --config webpack.config.js"
+    "webpack:src": "webpack-dev-server --host localhost --content-base app/public/ --hot --config webpack.config.js",
+    "build:src": "webpack --config webpack.config.js"
   },
   "dependencies": {
     "axios": "^0.19.2",
