@@ -71,4 +71,4 @@ app.on('error', (err, ctx) => {
 
 app.listen(8000, () => console.log('running'))
 
-module.exports = app
+// module.exports = app
