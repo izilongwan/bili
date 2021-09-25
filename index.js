@@ -25,8 +25,8 @@ app.use(catchError)
 app.use(cors({
   exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
   allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
-  origin () {
-    return CORS_ORIGIN;
+  origin (ctx) {
+    return ctx.request.header.origin || CORS_ORIGIN;
   },
   credentials: true // 允许跨域设置cookie，前端设置widthCredential
 }))
