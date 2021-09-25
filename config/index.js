@@ -1,6 +1,6 @@
 const { REDIS_CONF } = require('./db')
 
-const isProd = process.env.NODE_ENV === 'development' ? false : true,
+const isProd = process.env.NODE_ENV === 'production' ? true : false,
       BASE_URL = isProd
         ? '/'
         : 'http://localhost:8080/';
