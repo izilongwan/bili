@@ -1,11 +1,13 @@
+const { MYSQL_NAME = 'root', 
+        MYSQL_PASSWORD = 'izilongwan', 
+        MYSQL_HOST = 'localhost', } = process.env
+
 module.exports = {
   MYSQL_CONF: {
-    conf: ['bili_manager', 'izilongwan', 'izilongwan'],
-    // conf: ['bili_manager', 'root', 'izilongwan'],
+    conf: ['bili_manager', MYSQL_NAME, MYSQL_PASSWORD],
     base: {
       port: 3306,
-      host: 'db4free.net',
-      // host: 'localhost',
+      host: MYSQL_HOST,
       dialect: 'mysql',
       dialectOptions: {
         dateStrings: true,
