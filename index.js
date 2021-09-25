@@ -24,7 +24,7 @@ app.use(catchError)
 
 app.use(cors({
   // exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
-  allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  // allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
   origin (ctx) {
     return CORS_ORIGIN;
   },
