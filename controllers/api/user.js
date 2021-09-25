@@ -18,7 +18,7 @@ class User {
     }
 
     if (!Captcha.compareCaptcha(captcha)) {
-      return COMMON.INVALID_CAPTCHA
+      // return COMMON.INVALID_CAPTCHA
     }
 
     ret = await this.checkUserExists(account)

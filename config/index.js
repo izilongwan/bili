@@ -28,8 +28,8 @@ module.exports = {
 
   OAUTH: {
     github: {
-      client_id: '9beaa8453ffad1939f07',
-      client_secret: 'e8b22ecd0eb00d9c7195ec37cf169dca6312e8cf'
+      client_id: '',
+      client_secret: ''
     }
   },
 

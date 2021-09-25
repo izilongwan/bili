@@ -22,7 +22,8 @@ class Captcha {
   }
 
   compareCaptcha(text) {
-    if (Captcha.store[text.toLowerCase()]) {
+    text = text.toLowerCase()
+    if (Captcha.store[text]) {
       delete Captcha.store[text]
       return true
     }
