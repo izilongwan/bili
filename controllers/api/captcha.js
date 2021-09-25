@@ -31,10 +31,6 @@ class Captcha {
     return false
   }
 
-  env(ctx) {
-    ctx.body = process.env
-  }
-
   allStore(ctx) {
     ctx.body = Captcha.store
   }

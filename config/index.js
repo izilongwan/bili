@@ -24,7 +24,8 @@ module.exports = {
 
   CRYTO_SECRET: '!@#$%^&*QWERT',
 
-  CORS_ORIGIN: isProd ? 'https://admin-bili.vercel.app' : 'http://localhost:3000',
+  // CORS_ORIGIN: isProd ? 'https://admin-bili.vercel.app' : 'http://localhost:3000',
+  CORS_ORIGIN: 'https://admin-bili.vercel.app',
 
   OAUTH: {
     github: {
