@@ -1,8 +1,5 @@
 {
-  "index": {
-    "maximum": 30
-  },
-  "/": {
+  "index.js": {
     "maximum": 30
   }
 }
