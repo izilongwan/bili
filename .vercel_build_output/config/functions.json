@@ -1,5 +1,8 @@
 {
   "index.js": {
-    "maximum": 30
+    "maxDuration": 60
+  },
+  "/": {
+    "maxDuration": 60
   }
 }
