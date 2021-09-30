@@ -16,7 +16,6 @@ module.exports = async (ctx) => {
       },
       field,
       NAV: SEARCH_NAV,
-      curIdx: -1,
       kw: q
     });
     return;
@@ -36,7 +35,6 @@ module.exports = async (ctx) => {
     data,
     field,
     NAV: SEARCH_NAV,
-    curIdx: 0,
     kw: q
   });
 }

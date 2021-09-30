@@ -12,7 +12,6 @@ module.exports = async (ctx) => {
         data: [],
         count: 0
       },
-      curIdx: -1,
       NAV: [],
       field,
     });
@@ -21,7 +20,8 @@ module.exports = async (ctx) => {
 
   const baseParams = {
     page: 1,
-    num: 20
+    num: 20,
+    type: 0,
   }
 
   const params = {
@@ -38,13 +38,10 @@ module.exports = async (ctx) => {
     return;
   }
 
-  const curIdx = NAV.findIndex(item => item.field === field);
-
   await ctx.render('list', {
     CONF: list,
     data,
-    curIdx,
-    NAV,
+    NAV: NAV.slice(1),
     field,
   });
 }

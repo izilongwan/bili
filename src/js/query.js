@@ -136,12 +136,13 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
 
   const onPageSearchBtnClick = (page) => {
     if (data.curPage !== page) {
-      onPaginationClick(page, data.total, true);
+      onPaginationClick(page, true);
     }
   }
 
-  const onPaginationClick = (curPage, pages, render = false) => {
+  const onPaginationClick = (curPage, render = false) => {
     data.curPage = curPage;
+    console.log('🚀 ~ file: query.js ~ line 145 ~ onPaginationClick ~ data', data)
     win.scrollTo(0, 0);
     getCacheData(render);
   }

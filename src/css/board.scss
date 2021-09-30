@@ -1,5 +1,9 @@
 @import 'mixins.scss';
 
+.content-wrap {
+	min-height: 50%;
+}
+
 .board {
 	margin-top: 10px;
 	$hover-color: #039be5;

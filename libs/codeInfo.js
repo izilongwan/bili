@@ -69,7 +69,7 @@ module.exports = {
     },
     SUCCESS: {
       retCode: 0,
-      retMsg: 'Success'
+      retMsg: 'success'
     }
   }
 }

@@ -19,7 +19,7 @@ import '../css/noDataTip.scss'
 import Nav from '../modules/Nav'
 import Pagination from '../modules/Pagination'
 import { SEARCH_NAV } from '../config'
-import { tplReplace, asyncFunc, imgLazyLoad } from '../utils/tools'
+import { tplReplace, imgLazyLoad } from '../utils/tools'
 import * as API from '../api'
 import Search from '../modules/Search'
 import itemOneTpl from '../templates/board/itemOne.tpl'
@@ -40,7 +40,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
   const data = {
     cache: {},
     field: '',
-    pageSize: 60,
+    pageSize: 20,
     curPage: 1
   };
 
@@ -84,7 +84,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
       case 'bangumi':
         return itemFourTpl
       default:
-        break;
+        return itemOneTpl;
     }
   }
 
@@ -94,7 +94,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     }
   }
 
-  const onPaginationClick = (curPage, pages, render = false) => {
+  const onPaginationClick = (curPage, render = false) => {
     data.curPage = curPage;
     win.scrollTo(0, 0);
     getCacheData(render);
@@ -102,7 +102,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
 
   const onPageSearchBtnClick = (page) => {
     if (data.curPage !== page) {
-      onPaginationClick(page, data.pages, true);
+      onPaginationClick(page, true);
     }
   }
 
@@ -122,51 +122,65 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
   }
 
   const getListData = async (field, isRenderPagination) => {
-    const { apiName } = getApiName(field),
-          { pageSize, curPage } = data,
+    const { pageSize, curPage } = data,
           { loading } = dom;
 
     handleState(loading, true);
 
     const conf = {
-      apiName,
+      field,
       num: pageSize,
-      page: curPage
+      page: curPage,
+      type: 0
     }
 
-    const [err, result] = await asyncFunc(
-      () => API.getData(conf)
-    );
+    const [err, result] = await API.getData(conf)
+
+    handleState(loading, false);
 
     if (err) {
       console.log(err);
-      handleState(loading, false);
       return;
     }
 
-    const { code, msg, res } = result;
+    const { code, msg, data: res } = result;
 
     if (code === 0) {
-      const conf = Object.assign({}, res, { pages: res.count });
+      const isFieldAll = {}.toString.call(res.data) === '[object Object]'
+      const ret = isFieldAll ? formatFieldAllData(res) : res
+      const conf = Object.assign({}, ret, { pages: res.total })
       setCacheData(res);
-      handleRender(conf, curPage, isRenderPagination);
+      handleRender(conf, curPage, isRenderPagination, isFieldAll);
       return;
     }
-    handleState(loading, false);
-
-    console.log(msg);
   }
 
-  const getApiName = (field) =>
-    SEARCH_NAV.find(item => item.field === field);
+  const formatFieldAllData = (res) => {
+    const ret = [],
+          { data, total } = res
 
-  const renderList = (data, tpl) =>
+    for (const key in data) {
+      if (Object.hasOwnProperty.call(data, key)) {
+        const rest = data[key];
+        
+        ret.push(...rest.data)
+      }
+    }
+
+    console.log(ret)
+    return {
+      data: ret,
+      total
+    }
+  }
+
+  const renderList = (data, tpl, isSingleTpl) =>
     data.reduce((prev, cur) =>
-      prev += tplReplace(tpl,
+      prev += tplReplace(isSingleTpl ? getTpl(cur.field) : tpl,
         Object.assign({}, cur, {
           isUpShow: cur.field === 'promote' ? '' : 'hide',
           countHide: cur.play_count ? '' : 'hide',
-          tags: cur.tags && JSON.parse(cur.tags).join('、')
+          tags: cur.tags && JSON.parse(cur.tags)
       })), '')
 
   const renderPagination = (curPage, pages) => {
@@ -189,10 +203,10 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     !cache[field] && (cache[field] = []);
     cache[field][curPage] = result.data;
 
-    !cache[field].pages && (cache[field].pages = result.count);
+    !cache[field].pages && (cache[field].pages = result.total);
   }
 
-  const getCacheData = (isRenderPagination = true) => {
+  const getCacheData = (isRenderPagination = true, isSingleTpl = false) => {
     const { field, cache, curPage } = data,
           { board, noDataTip, pagination, notFound } = dom,
           item = cache[field];
@@ -218,10 +232,10 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
       pages: item.pages
     }
 
-    handleRender(conf, curPage, isRenderPagination);
+    handleRender(conf, curPage, isRenderPagination, isSingleTpl);
   }
 
-  const handleRender = ({ data: _data, pages }, curPage, isRenderPagination) => {
+  const handleRender = ({ data: _data, pages }, curPage, isRenderPagination, isSingleTpl) => {
     const { noDataTip, board, pagination, loading } = dom;
 
     if (pages <= 0) {
@@ -230,7 +244,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
       return;
     }
 
-    board.innerHTML = renderList(_data, data.tpl);
+    board.innerHTML = renderList(_data, data.tpl, isSingleTpl);
     isRenderPagination && renderPagination(curPage, pages);
     handleState(pagination, true);
     handleState(loading, false);

@@ -8,6 +8,8 @@ const cp               = require('child_process'),
 
 const fsPromises = fs.promises
 
+const privateList = ['crawler_settings', 'user']
+
 const readDir = async (dir) => await fsPromises.readdir(__dirname + '/../' + dir)
 
 const formatFilename = (filename) => {
@@ -30,7 +32,11 @@ const generateDirMap = async (dir) => {
   const dirs = await readDir(dir)
 
   return dirs.reduce((prev, curr) => {
-    prev[formatFilename(curr)] = require(__dirname + '/../' + dir +'/' + curr)
+    const key = formatFilename(curr)
+    
+    if (!privateList.includes(key)) {
+      prev[formatFilename(curr)] = require(__dirname + '/../' + dir +'/' + curr)
+    }
 
     return prev;
   }, {})

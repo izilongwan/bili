@@ -60,7 +60,11 @@ class Data {
 
     data.forEach((item) => item.setDataValue('field', field));
 
-    return { ...COMMON.SUCCESS, data: { data, total } };
+    ret = params.type === 0
+      ? await this.getDataSingleByField(data, total, conf)
+      : { data, total }
+
+    return { ...COMMON.SUCCESS, data: ret };
   }
 
   async searchData (ctx, next) {
@@ -102,7 +106,7 @@ class Data {
       return COMMON.DATA_QUERY_ERROR
     }
 
-    const total = data.length;
+    const total = model.count(conf);
 
     data.forEach((item) => item.setDataValue('field', field));
 
@@ -140,9 +144,6 @@ class Data {
 
   async getAllData (conf, type) {
     const models = await MODELS
-
-    delete models.user
-    delete models.crawler_settings
 
     const arr = []
 
@@ -220,6 +221,28 @@ class Data {
 
       return prev
     }, { data: {}, total: 0 })
+  }
+
+  async getDataSingleByField(data, total, conf) {
+    const ret = { data,
+                  total },
+          fieldsTotalObject = {}
+
+    const models = await MODELS
+
+    total = 0
+
+    for (const key in models) {
+      if (Object.hasOwnProperty.call(models, key)) {
+        const count = await models[key].count(conf)
+        fieldsTotalObject[key] = count
+        total += count
+      }
+    }
+
+    fieldsTotalObject.all = total
+    ret.fieldsTotalObject = fieldsTotalObject
+    return ret
   }
 }
 

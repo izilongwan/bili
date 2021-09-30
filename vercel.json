@@ -9,7 +9,7 @@
     "index.js": {
       "runtime": "@vercel/node",
       "memory": 3008,
-      "maxDuration": 60
+      "maxDuration": 9
     }
   }
 }

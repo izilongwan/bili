@@ -3,7 +3,7 @@ export default ((doc) => {
     this.wrap = doc.querySelector(wrap);
     this.curPage = opt.curPage || 1;
     this.pages = opt.pages || parseInt(this.wrap.dataset.pages) || 0;
-    this.pages = parseInt(this.pages / (opt.pageSize || 1)) + 1;
+    this.pages = Math.ceil(this.pages / (opt.pageSize || 1));
     this.pageListClick = opt.pageListClick;
     this.pageSearchBtnClick = opt.pageSearchBtnClick;
   }
