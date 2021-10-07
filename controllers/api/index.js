@@ -6,7 +6,7 @@ class Api {
   async entry(ctx) {
     const { body } = ctx.request,
           { module: m,
-            method } = ctx.request.body
+            method } = body
 
     const ctxQueryBody = {
       module: m,
@@ -16,8 +16,7 @@ class Api {
 
     let ret = utils.checkParams(body, 'module', 'method')
 
-    const { getReturnBodyInfo,
-            checkLoginState } = Api.prototype
+    const { getReturnBodyInfo } = Api.prototype
 
     if (!ret) {
       ctx.body = getReturnBodyInfo(ctx, ctxQueryBody, COMMON.INVALID_PARAMS)
@@ -45,24 +44,9 @@ class Api {
       }
     }
 
-    if (!await checkLoginState(ctx)) {
-      ctx.body = getReturnBodyInfo(ctx, ctxQueryBody, ENTRY.NOU_LOGIN)
-      return
-    }
-
     const retBody = await _module[method](ctx)
 
     ctx.body = getReturnBodyInfo(ctx, ctxQueryBody, ENTRY.SUCCESS, retBody)
-  }
-
-  async checkLoginState(ctx) {
-    const checkLoginArr = ['data', 'crawler']
-
-    if (checkLoginArr.includes(ctx.request.body.module)) {
-      return await User.checkLoginState(ctx)
-    }
-
-    return true
   }
 
   getTimeStamp(ctx) {
@@ -72,11 +56,13 @@ class Api {
   }
 
   getReturnBodyInfo(ctx, ctxReqBody, info, retBody = {}) {
+    const { getTimeStamp } = Api.prototype
+    
     return {
       ...ctxReqBody,
       ...info,
       retBody,
-      timeCost: Api.prototype.getTimeStamp(ctx)
+      timeCost: getTimeStamp(ctx)
     }
   }
 }

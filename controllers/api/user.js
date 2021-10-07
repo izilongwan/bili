@@ -28,7 +28,6 @@ class User {
     }
 
     if (account !== ret.account) {
-      console.log(account, ret.account)
       return COMMON.INVALID_ACCOUNT_OR_PASSWORD
     }
 
@@ -40,7 +39,6 @@ class User {
       this.generatorSessionId(ctx)
     }
 
-    console.log(ctx.session)
     return COMMON.SUCCESS
   }
 
@@ -86,15 +84,6 @@ class User {
     delete ctx.session.sessionId
 
     return COMMON.SUCCESS
-  }
-
-  async checkLoginState(ctx) {
-    if (ctx.session.sessionId) {
-      this.generatorSessionId(ctx)
-      return true
-    }
-
-    return false
   }
 
   async checkUserExists(account) {

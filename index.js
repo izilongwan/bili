@@ -14,7 +14,9 @@ const page = require('./routes/page')
 
 const catchError = require('./middleware/catchError')
 
-const { SESSION_INFO, COOKIE_INFO, REDIS_INFO, CORS_ORIGIN } = require('./config');
+const { SESSION_INFO, COOKIE_INFO, REDIS_INFO, corsOrigin } = require('./config');
+
+require('./models/CrawlerSettings')
 
 // error handler
 onerror(app)
@@ -26,7 +28,7 @@ app.use(cors({
   // exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
   // allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
   origin (ctx) {
-    return CORS_ORIGIN;
+    return corsOrigin(ctx);
   },
   credentials: true // 允许跨域设置cookie，前端设置widthCredential
 }))

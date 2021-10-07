@@ -11,7 +11,6 @@ class Data {
   }
 
   get getConf() {
-    console.log(this.conf)
     return JSON.parse(JSON.stringify(this.conf))
   }
 
@@ -118,7 +117,7 @@ class Data {
   async updateData(ctx) {
     const { params = {} } = ctx.request.body
 
-    let ret = utils.checkParams(params, 'status', 'id', 'field', 'tags')
+    let ret = utils.checkParams(params, 'status', 'id', 'field')
 
     if (!ret) {
       return COMMON.INVALID_PARAMS

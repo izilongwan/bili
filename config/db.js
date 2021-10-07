@@ -1,6 +1,6 @@
-const { MYSQL_NAME = 'root', 
+const { MYSQL_NAME = 'izilongwan', 
         MYSQL_PASSWORD = 'izilongwan', 
-        MYSQL_HOST = 'localhost', } = process.env
+        MYSQL_HOST = '127.0.0.1', } = process.env
 
 module.exports = {
   MYSQL_CONF: {

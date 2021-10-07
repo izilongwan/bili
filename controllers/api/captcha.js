@@ -1,6 +1,5 @@
 const captcha    = require('svg-captcha'),
       { COMMON } = require('../../libs/codeInfo')
-      config     = require('../../config')
 
 class Captcha {
   async create(ctx, next) {
@@ -33,10 +32,6 @@ class Captcha {
 
   allStore(ctx) {
     ctx.body = Captcha.store
-  }
-
-  getConfig(ctx) {
-    ctx.body = config
   }
 
   static store = {

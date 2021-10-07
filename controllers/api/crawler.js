@@ -132,7 +132,7 @@ class Crawler {
     }
   }
 
-  async crawlerSwitchModel(field, force) {
+  async crawlerSwitchModel(field, force = 1) {
     const crawler = (await CRAWLERS)[field]
 
     const conf = {
@@ -230,7 +230,7 @@ class Crawler {
     return COMMON.SUCCESS
   }
 
-  async crawlerDataCheckStatus(field, force = 0) {
+  async crawlerDataCheckStatus(field, force = 1) {
     if (force === 1) {
       return { status: 0 }
     }

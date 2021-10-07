@@ -5,7 +5,19 @@ const isProd = process.env.NODE_ENV === 'production' ? true : false,
         ? '/'
         : 'http://localhost:8080/';
 
+const CORS_ORIGIN_LIST = [
+  'http://47.107.72.91',
+  'http://47.107.72.91:5002',
+  'https://admin-bili.vercel.app',
+]
+
+const CORS_ORIGIN_REG = /http:\/\/47\.107\.72\.91/
+
 module.exports = {
+  EXCLUDE_METHODS: {
+    user: ['login', 'logout'],
+  },
+
   SESSION_INFO: {
     keys: ['QWERTYUIOPPOIUYTREWQ!@#$%^&'],
     name: 'admin_bili.sid',
@@ -24,7 +36,18 @@ module.exports = {
 
   CRYTO_SECRET: '!@#$%^&*QWERT',
 
-  CORS_ORIGIN: isProd ? 'https://admin-bili.vercel.app' : 'http://localhost:3000',
+  corsOrigin(ctx) {
+    const { origin } = ctx.request.headers
+
+    if (isProd) {
+      return (
+        CORS_ORIGIN_LIST.find(cors => cors === origin)
+        || CORS_ORIGIN_REG.test(origin)
+      )
+    }
+
+    return origin
+  },
 
   OAUTH: {
     github: {
