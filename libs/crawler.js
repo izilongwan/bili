@@ -36,7 +36,7 @@ const crawler = options => async () => {
   return new Promise(async (resolve, reject) => {
     const launchConfig = {
       timeout: 10 * 60 * 1000,
-      headless: false,
+      headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     }
 
