@@ -3,7 +3,7 @@ const { REDIS_CONF } = require('./db')
 const isProd = process.env.NODE_ENV === 'production' ? true : false,
       BASE_URL = isProd
         ? '/'
-        : 'http://localhost:8080/';
+        : 'http://localhost:3000/';
 
 const CORS_ORIGIN_LIST = [
   'http://47.107.72.91',

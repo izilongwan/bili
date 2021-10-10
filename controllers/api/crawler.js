@@ -147,10 +147,19 @@ class Crawler {
       return { status }
     }
 
+    let data = []
+
     if (crawler) {
-      await CrawlerSettings.update({ status: 1 }, conf)
-      const data = await crawler()
-      await CrawlerSettings.update({ status: 0 }, conf)
+      try {
+        await CrawlerSettings.update({ status: 1 }, conf)
+        data = await crawler()
+      } 
+      catch (error) {
+        console.log('🚀 ~ file: crawler.js ~ line 159 ~ Crawler ~ crawlerSwitchModel ~ error', error)
+      }
+      finally {
+        await CrawlerSettings.update({ status: 0 }, conf)
+      }
 
       return {
         status: 0,
