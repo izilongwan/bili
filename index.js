@@ -50,7 +50,6 @@ app.use(views(__dirname + '/views', {
 
 app.keys = SESSION_INFO.keys;
 app.use(session({
-  httpOnly: true,
   key: SESSION_INFO.name,
   prefix: SESSION_INFO.prefix,
   cookie: COOKIE_INFO,

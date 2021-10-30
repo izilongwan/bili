@@ -1,5 +1,6 @@
 const captcha    = require('svg-captcha'),
-      { COMMON } = require('../../libs/codeInfo')
+      { COMMON } = require('../../libs/codeInfo'),
+      { redisSet, redisGet } = require('../../libs/redisClient')
 
 class Captcha {
   async create(ctx, next) {
