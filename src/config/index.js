@@ -3,7 +3,7 @@ export const isPrd = process.env.NODE_ENV === 'production'
   : false;
 
 export const SEARCH_NAV = [
-  { field: 'all', text: '全部' },
+  // { field: 'all', text: '全部' },
   { field: 'full', text: '全站' },
   { field: 'promote', text: '推广' },
   { field: 'live', text: '直播' },
