@@ -1,4 +1,6 @@
-const { MYSQL_NAME = 'root',
+const isPord = process.env.NODE_ENV === 'production'
+
+const { MYSQL_NAME = isPord ? 'izilongwan' : 'root',
         MYSQL_PASSWORD = 'izilongwan',
         MYSQL_HOST = '127.0.0.1', } = process.env
 
