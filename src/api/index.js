@@ -5,9 +5,9 @@ const req = (method, params) => http({
   url: API.COMMON_API,
   method: 'post',
   data: {
-    module: 'index',
+    module: '/service/index',
     method,
-    params: Object.assign({ filename: 'service' }, params)
+    params,
   }
 })
 

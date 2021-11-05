@@ -106,7 +106,10 @@ const config = {
   devServer: {
     watchOptions: {
       ignored: /node_modules/
-    }
+    },
+    port: 3000,
+    hot: true,
+    compress: true,
   }
 };
 

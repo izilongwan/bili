@@ -23,9 +23,7 @@ class Api {
       return
     }
 
-    const filename = (body.params || {}).filename
-
-    ret = await utils.checkFileInfo(m, filename)
+    ret = await utils.checkFileInfo(m)
 
     if (!ret.exist) {
       ctx.body = getReturnBodyInfo(ctx, ctxQueryBody, ENTRY.MODULE_NOT_EXIST)

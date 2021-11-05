@@ -130,13 +130,15 @@ const checkParams = (obj = {}, ...params) => {
   return true
 }
 
-const checkFileInfo = async (pathname, type = 'controllers/api') => {
+const checkFileInfo = async (pathname) => {
   const ret = {
     exist: false,
     module: null
   };
 
-  const filename = path.resolve(__dirname, '../' + type + '/' + pathname + '.js')
+  const filename = /^\//.test(pathname)
+    ? path.resolve(__dirname, '..' + pathname + '.js')
+    : path.resolve(__dirname, '../controllers/api/' + pathname + '.js')
   console.log('🚀 ~ file: utils.js ~ line 134 ~ checkFileInfo ~ filename', filename)
 
   try {
