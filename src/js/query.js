@@ -176,7 +176,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
         Object.assign({}, cur, {
           isUpShow: cur.field === 'promote' ? '' : 'hide',
           countHide: cur.play_count ? '' : 'hide',
-          tags: cur.tags && JSON.parse(cur.tags),
+          tags: cur.tags && cur.tags.join('、')
       })), '')
 
   const renderPagination = (curPage, pages) => {

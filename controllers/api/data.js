@@ -1,6 +1,7 @@
 const { COMMON } = require('../../libs/codeInfo');
 const utils = require('../../libs/utils');
 const { Op } = require('sequelize');
+const { NAV } = require('../../config');
 
 const { MODELS } = utils
 
@@ -18,7 +19,8 @@ class Data {
     const { params = {} }  = ctx.request.body,
           { field,
             page,
-            num } = params
+            num,
+            type = 0 } = params
 
     let ret = utils.checkParams(params, 'field', 'page', 'num')
 
@@ -30,17 +32,17 @@ class Data {
     const limit = +num;
     const offset = (+page - 1) * +limit;
     const query = {
-      ...conf,
       limit,
       offset,
       attributes: {
         exclude: ['createdAt']
       },
       order: [['updatedAt', 'DESC']],
+      ...conf,
     }
 
     if (field === 'all') {
-      return await this.getAllData(query, 0)
+      return await this.getAllData(query, type)
     }
 
     const model = (await MODELS)[field]
@@ -242,6 +244,10 @@ class Data {
     fieldsTotalObject.all = total
     ret.fieldsTotalObject = fieldsTotalObject
     return ret
+  }
+
+  getNav() {
+    return { ...COMMON.SUCCESS, data: NAV };
   }
 }
 

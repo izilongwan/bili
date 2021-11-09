@@ -145,7 +145,7 @@ module.exports = {
   },
 
   NAV: [
-    { text: '全部', field: 'all' },
+    // { text: '全部', field: 'all' },
     { text: '全站', field: 'full' },
     { text: '推广', field: 'promote' },
     { text: '直播', field: 'live' },

@@ -47,6 +47,11 @@ const ORIGIN = seq.define('origin', {
     allowNull: false,
     set (val) {
       return this.setDataValue('tags', JSON.stringify(val));
+    },
+    get (val) {
+      const ret = JSON.parse(this.getDataValue(val));
+
+      return [].concat(ret);
     }
   },
 

@@ -162,7 +162,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     for (const key in data) {
       if (Object.hasOwnProperty.call(data, key)) {
         const rest = data[key];
-        
+
         ret.push(...rest.data)
       }
     }
@@ -180,7 +180,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
         Object.assign({}, cur, {
           isUpShow: cur.field === 'promote' ? '' : 'hide',
           countHide: cur.play_count ? '' : 'hide',
-          tags: cur.tags && JSON.parse(cur.tags)
+          tags: cur.tags && cur.tags.join('、')
       })), '')
 
   const renderPagination = (curPage, pages) => {

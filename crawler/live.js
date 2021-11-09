@@ -40,7 +40,7 @@ module.exports = crawler({
         live_count: await transferNum($live_count.text()),
         up_name: $up.find('.name').text(),
         up_img: $up.find('img').prop('src'),
-        tag: $up.find('.tag').text(),
+        tags: $up.find('.tag').text(),
       }
     }
 
