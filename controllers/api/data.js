@@ -8,11 +8,75 @@ const { MODELS } = utils
 class Data {
   constructor(conf = { where: {} }) {
     this.conf = conf
-    this.primitiveModelKeys = ['crawler_settings', 'user']
   }
 
   get getConf() {
     return JSON.parse(JSON.stringify(this.conf))
+  }
+
+  getDataFieldOrder(aOrder, field) {
+    const play_count = ['play_count', 'DESC']
+    const fav_count = ['fav_count', 'DESC']
+    const popup_count = ['popup_count', 'DESC']
+    const score = ['score', 'DESC']
+    const thumb_count = ['thumb_count', 'DESC']
+    const live_count = ['live_count', 'DESC']
+
+    const oOrders = {
+      promote: {},
+      carousel: {},
+      bangumi: {
+        play_count,
+        fav_count,
+        popup_count,
+      },
+      movie: {
+        play_count,
+        fav_count,
+        popup_count,
+      },
+      full: {
+        score,
+      },
+      origin: {
+        score,
+      },
+      record: {
+        play_count,
+      },
+      rookie: {
+        score,
+        play_count,
+        popup_count,
+      },
+      e_sports: {
+        thumb_count,
+        play_count,
+      },
+      live: {
+        live_count,
+      }
+    }
+
+    if (aOrder === 'hot') {
+      if (oOrders[field]) {
+        return Object.values(oOrders[field])
+      }
+
+      return []
+    }
+
+    if (!Array.isArray(aOrder)) {
+      return []
+    }
+
+    return aOrder.reduce((p, c) => {
+      const order = oOrders[field] && oOrders[field][c]
+
+      order && p.push(order)
+
+      return p
+    }, [])
   }
 
   async getData (ctx, next) {
@@ -20,6 +84,7 @@ class Data {
           { field,
             page,
             num,
+            order = [],
             type = 0 } = params
 
     let ret = utils.checkParams(params, 'field', 'page', 'num')
@@ -40,6 +105,8 @@ class Data {
       order: [['updatedAt', 'DESC']],
       ...conf,
     }
+
+    this.setDataOrderType({ query, field, order })
 
     if (field === 'all') {
       return await this.getAllData(query, type)
@@ -148,8 +215,11 @@ class Data {
 
     const arr = []
 
-    for (const [key, model] of Object.entries(models)) {
-      arr.push(model.findAll(conf))
+    const query = JSON.stringify(conf)
+
+    for (const [field, model] of Object.entries(models)) {
+      const fieldConf = this.setDataOrderType({ field, order: 'hot', query: JSON.parse(query) })
+      arr.push(model.findAll(fieldConf))
     }
 
     const [err, result] = await utils.asyncFunc(
@@ -178,6 +248,14 @@ class Data {
       default:
         return this.getDataByField(result, modelKeys)
     }
+  }
+
+  setDataOrderType ({ field, order, query }) {
+    const aOrder = this.getDataFieldOrder(order, field)
+
+    aOrder.length && (query.order = aOrder)
+
+    return query
   }
 
   getDataByArray(result, modelKeys) {

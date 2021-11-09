@@ -1,11 +1,13 @@
 const { Data } = require('../controllers/api/data')
 class IndexService extends Data {
-  constructor() {
-    const conf = {
+  constructor(conf = {}) {
+    conf = {
       attributes: {
         exclude: ['createdAt', 'updatedAt', 'status'],
       },
-      where: { status: 1 }
+      order: [['updatedAt', 'DESC']],
+      where: { status: 1 },
+      ...conf,
     }
     super(conf)
   }

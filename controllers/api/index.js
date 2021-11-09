@@ -1,6 +1,5 @@
 const { COMMON, ENTRY } = require('../../libs/codeInfo');
 const utils = require('../../libs/utils');
-const User = require('./user')
 
 class Api {
   async entry(ctx) {
