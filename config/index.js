@@ -15,7 +15,7 @@ const CORS_ORIGIN_REG = /http:\/\/47\.107\.72\.91/
 
 module.exports = {
   EXCLUDE_METHODS: {
-    user: ['login', 'logout'],
+    user: ['login', 'logout', 'checkLoginState'],
     '/service/index': ['*'],
   },
 

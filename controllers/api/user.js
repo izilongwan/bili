@@ -86,6 +86,10 @@ class User {
     return COMMON.SUCCESS
   }
 
+  async checkLoginState(ctx) {
+    return ctx.session.sessionId ? COMMON.SUCCESS : ENTRY.NOU_LOGIN
+  }
+
   async checkUserExists(account) {
     return UserModel.findOne({ where: { account, status: 1 } })
   }
