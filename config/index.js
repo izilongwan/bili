@@ -9,9 +9,9 @@ const CORS_ORIGIN_LIST = [
   'http://47.107.72.91',
   'http://47.107.72.91:5002',
   'https://admin-bili.vercel.app',
+  /http:\/\/47\.107\.72\.91/, 
+  /\.letme\.site$/,
 ]
-
-const CORS_ORIGIN_REG = /http:\/\/47\.107\.72\.91/
 
 module.exports = {
   EXCLUDE_METHODS: {
@@ -42,8 +42,15 @@ module.exports = {
 
     if (isProd) {
       return (
-        CORS_ORIGIN_LIST.find(cors => cors === origin)
-        || CORS_ORIGIN_REG.test(origin)
+        CORS_ORIGIN_LIST.find(cors => {
+			if (cors.test) {
+				return cors.test(origin)
+			}
+
+			return cors === origin
+		})
+		? origin
+		: ''
       )
     }
 
@@ -145,7 +152,7 @@ module.exports = {
   },
 
   NAV: [
-    // { text: '全部', field: 'all' },
+    { text: '全部', field: 'all' },
     { text: '全站', field: 'full' },
     { text: '推广', field: 'promote' },
     { text: '直播', field: 'live' },

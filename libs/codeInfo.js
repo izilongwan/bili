@@ -63,7 +63,11 @@ module.exports = {
       retCode: 2002,
       retMsg: 'The method doesn"t exist'
     },
-    NOU_LOGIN: {
+    NO_ACCESS: {
+      retCode: 2003,
+      retMsg: 'You has not access'
+    },
+    NOT_LOGIN: {
       retCode: -1,
       retMsg: 'You are not logged'
     },

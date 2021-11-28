@@ -41,14 +41,17 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
     cache: {},
     field: '',
     pageSize: 20,
-    curPage: 1
+    curPage: 1,
+    nav: [],
   };
 
-  const init = () => {
+  const init = async () => {
     data.field = getField();
     data.tpl = getTpl(data.field);
 
-    new Nav('.J_nav', SEARCH_NAV, data.field, onNavClick).init();
+    const navData = await getNav()
+
+    new Nav('.J_nav', navData, data.field, onNavClick).init();
     new Search('.J_false-search-wrap', onSearchClick).init();
     renderPagination();
     imgLazyLoad();
@@ -121,6 +124,31 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
       : classList.add('hide');
   }
 
+  const getNav = async () => {
+    const [err, ret] = await API.getNav()
+
+    if (err) {
+      console.log(ret.msg)
+      return SEARCH_NAV
+    }
+
+    const [err0, ret0] = ret[0]
+
+    if (err0) {
+      console.log(ret0.msg)
+      return SEARCH_NAV
+    }
+
+    const { code, msg, data: navData } = ret0
+
+    if (code !== 0) {
+      console.log(msg)
+      return SEARCH_NAV
+    }
+
+    return navData
+  }
+
   const getListData = async (field, isRenderPagination) => {
     const { pageSize, curPage } = data,
           { loading } = dom;
@@ -134,7 +162,7 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
       type: 0
     }
 
-    const [err, result] = await API.getData(conf)
+    const [err, result] = await API.getListData(conf)
 
     handleState(loading, false);
 
@@ -143,7 +171,14 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
       return;
     }
 
-    const { code, msg, data: res } = result;
+    const [err0, ret0] = result[0];
+
+    if (err0) {
+      console.log(ret0.msg);
+      return;
+    }
+
+    const { code, msg, data: res } = ret0
 
     if (code === 0) {
       const isFieldAll = {}.toString.call(res.data) === '[object Object]'
@@ -153,6 +188,8 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
       handleRender(conf, curPage, isRenderPagination, isFieldAll);
       return;
     }
+
+    console.log(msg)
   }
 
   const formatFieldAllData = (res) => {

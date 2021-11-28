@@ -21,9 +21,8 @@ module.exports = async (ctx) => {
     return;
   }
 
-  ctx.request.body.params = { kw: q, field };
-
-  const { code, msg, data = {} } = await Service.searchData(ctx);
+  const params = { kw: q, field };
+  const { code, msg, data = {} } = await Service.searchData(params);
 
   if (code !== 0) {
     console.log('list -> msg', msg)

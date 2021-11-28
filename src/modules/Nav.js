@@ -14,7 +14,6 @@ class Nav {
     this.size = Nav.getStyle(this.oItems[0], 'width');
     this.field = field;
     this.idx = this.getIdx(field);
-
     this.callback = callback;
 
     this.setBarPos(this.idx === -1 ? 0 : this.idx);
@@ -26,7 +25,7 @@ class Nav {
   }
 
   bindEvent () {
-    this.oNav.addEventListener('click', () => this.onNavClick(), false);
+    this.oNav.addEventListener('click', (e) => this.onNavClick(e), false);
   }
 
   onNavClick (ev) {

@@ -4,9 +4,10 @@ const { resolve }             = require('path'),
       MiniCssExtractPlugin    = require('mini-css-extract-plugin'),
       OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
+const { mode } = process.env
+
 const config = {
-  // mode: 'development',
-  mode: 'production',
+  mode,
 
   entry: {
     index: resolve(__dirname, './src/js/index.js'),

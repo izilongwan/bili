@@ -2,6 +2,7 @@ const { COMMON } = require('../../libs/codeInfo');
 const utils = require('../../libs/utils');
 const { Op } = require('sequelize');
 const { NAV } = require('../../config');
+const { object: { deepClone } } = require('@izilong/util')
 
 const { MODELS } = utils
 
@@ -11,7 +12,7 @@ class Data {
   }
 
   get getConf() {
-    return JSON.parse(JSON.stringify(this.conf))
+    return deepClone(this.conf)
   }
 
   getDataFieldOrder(aOrder, field) {
@@ -21,10 +22,15 @@ class Data {
     const score = ['score', 'DESC']
     const thumb_count = ['thumb_count', 'DESC']
     const live_count = ['live_count', 'DESC']
+    const updated = ['updatedAt', 'DESC']
 
     const oOrders = {
-      promote: {},
-      carousel: {},
+      promote: {
+        updated,
+      },
+      carousel: {
+        updated,
+      },
       bangumi: {
         play_count,
         fav_count,
@@ -79,9 +85,8 @@ class Data {
     }, [])
   }
 
-  async getData (ctx, next) {
-    const { params = {} }  = ctx.request.body,
-          { field,
+  async getData (params = {}) {
+    const { field,
             page,
             num,
             order = [],
@@ -135,9 +140,8 @@ class Data {
     return { ...COMMON.SUCCESS, data: ret };
   }
 
-  async searchData (ctx, next) {
-    const { params = {} } = ctx.request.body,
-          { field, kw }   = params
+  async searchData (params = {}) {
+    const { field, kw }   = params
 
     let ret = utils.checkParams(params, 'field', 'kw')
 
@@ -212,13 +216,11 @@ class Data {
 
   async getAllData (conf, type) {
     const models = await MODELS
-
     const arr = []
-
-    const query = JSON.stringify(conf)
+    const query = deepClone(conf)
 
     for (const [field, model] of Object.entries(models)) {
-      const fieldConf = this.setDataOrderType({ field, order: 'hot', query: JSON.parse(query) })
+      const fieldConf = this.setDataOrderType({ field, order: 'hot', query })
       arr.push(model.findAll(fieldConf))
     }
 

@@ -4,6 +4,6 @@ const router = require('koa-router')(),
 router.get('/', controller.home)
       .get('/list/:field?', controller.list)
       .get('/query/:field?', controller.query)
-      .get('all', controller._404);
+      .get('*', controller._404);
 
 module.exports = router;

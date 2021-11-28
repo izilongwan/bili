@@ -1,23 +1,31 @@
 const { EXCLUDE_METHODS } = require('../config')
-const { ENTRY } = require('../libs/codeInfo')
 
 module.exports = async function checkAccess(ctx, next) {
-  const { body } = ctx.request,
-        { module: m,
-          method } = body
+  const { body }   = ctx.request,
+        { params = {} } = body
 
-  if (EXCLUDE_METHODS[m]) {
+  for (const key in params) {
+    if (Object.hasOwnProperty.call(params, key)) {
+      const { module: m,
+        method } = params[key] || {};
 
-    if (EXCLUDE_METHODS[m].includes(method) || EXCLUDE_METHODS[m].includes('*')) {
+        if (EXCLUDE_METHODS[m]) {
 
-      ctx.access = 1
-      await next()
-      return
+          if (EXCLUDE_METHODS[m].includes(method) || EXCLUDE_METHODS[m].includes('*')) {
+
+            params[key]['access'] = 1 // 可以请求
+            continue
+          }
+
+          params[key]['access'] = 0 // 无权限
+        }
+        else {
+          params[key]['access'] = -1 // 需要登录
+        }
     }
-    
-    ctx.body = ENTRY.NOU_LOGIN
-    return
   }
+
+  ctx.session.sessionId && User.generatorSessionId(ctx)
 
   await next()
 }

@@ -1,0 +1,6 @@
+export * from './createElement'
+export * from './elemPos'
+export * from './getParam'
+export * from './http'
+export * from './imgLazyLoad'
+export * from './tplreplace'

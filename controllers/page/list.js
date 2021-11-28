@@ -29,9 +29,7 @@ module.exports = async (ctx) => {
     field,
   }
 
-  ctx.request.body.params = params
-
-  const { code, msg, data = {} } = await Service.getData(ctx)
+  const { code, msg, data = {} } = await Service.getData(params)
 
   if (code !== 0) {
     console.log('index -> msg', msg)
@@ -41,7 +39,7 @@ module.exports = async (ctx) => {
   await ctx.render('list', {
     CONF: list,
     data,
-    NAV: NAV.slice(1),
+    NAV,
     field,
   });
 }

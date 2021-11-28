@@ -4,7 +4,7 @@ const cp               = require('child_process'),
       crypto           = require('crypto'),
       fs               = require('fs'),
       path             = require('path'),
-      { COMMON }       = require('./codeInfo')
+      { COMMON, ENTRY }       = require('./codeInfo')
 
 const fsPromises = fs.promises
 
@@ -169,6 +169,22 @@ function transferNum(numStr) {
   return parseFloat(numStr)
 }
 
+function checkAccess(access) {
+  switch (access) {
+    case 0:
+      return [false, ENTRY.NO_ACCESS]
+      
+    case 1:
+      return [true]
+
+    case -1:
+      return [false, ENTRY.NOT_LOGIN]
+  
+    default:
+      return [false, ENTRY.NO_ACCESS]
+  }
+}
+
 module.exports = {
   startProcess (opts) {
     return new Promise((_resolve) => {
@@ -235,4 +251,5 @@ module.exports = {
   transferNum,
   MODELS: generateDirMap('models'),
   CRAWLERS: generateDirMap('crawler'),
+  checkAccess,
 }

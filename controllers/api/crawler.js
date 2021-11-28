@@ -20,7 +20,7 @@ class Crawler {
     }
   }
 
-  async crawlerSettings(ctx) {
+  async crawlerSettings() {
     const data = await CrawlerSettings.findAll(),
           total = await CrawlerSettings.count()
 
@@ -33,9 +33,7 @@ class Crawler {
     }
   }
 
-  async crawlerSettingsUpdate(ctx) {
-    const { params = {} } = ctx.request.body
-
+  async crawlerSettingsUpdate(params = {}) {
     let ret = utils.checkParams(params, 'field', 'switch_type', 'id', 'duration', 'title')
 
     if (!ret) {
@@ -72,9 +70,7 @@ class Crawler {
     return utils.updateModelAndReturnRet(CrawlerSettings, data, conf)
   }
 
-  async crawlerData(ctx) {
-    const { params = {} } = ctx.request.body
-
+  async crawlerData(params = {}) {
     let ret = utils.checkParams(params, 'field', 'id')
 
     if (!ret) {

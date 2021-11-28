@@ -20,7 +20,7 @@ import '../css/search.scss'
 import Pagination from '../modules/Pagination'
 import * as API from '../api'
 import { SEARCH_NAV } from '../config'
-import { tplReplace, imgLazyLoad, asyncFunc, getUrlParam } from '../utils/tools'
+import { tplReplace, imgLazyLoad, getUrlParam } from '../utils/tools'
 import Nav from '../modules/Nav'
 import Search from '../modules/Search'
 import itemOneTpl from '../templates/board/itemOne.tpl'
@@ -245,21 +245,30 @@ import itemFourTpl from '../templates/board/itemFour.tpl'
 
     handleState(loading, true);
 
-    const [err, res] = await API.serachData(conf)
-
-    if (err) {
-      console.log(err.message);
-      return;
-    }
-
-    const { code, msg, data: result } = res;
-
-    if (code === 0) {
-      renderData(result)
-      return;
-    }
+    const [err, res] = await API.getSearchData(conf)
 
     handleState(loading, false);
+
+    if (err) {
+      console.log(res.msg);
+      return;
+    }
+
+    const [err0, res0] = res[0];
+
+    if (err0) {
+      console.log(res0.msg);
+      return
+    }
+
+    const { code, msg, data } = res0
+
+    if (code === 0) {
+      renderData(data)
+      return;
+    }
+
+    console.log(msg)
   }
 
   const renderData = (result) => {

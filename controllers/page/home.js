@@ -12,9 +12,7 @@ module.exports = async (ctx) => {
     field: 'all',
   }
 
-  ctx.request.body.params = params
-
-  const { code, msg, data = {} } = await Service.getData(ctx),
+  const { code, msg, data = {} } = await Service.getData(params),
         { index }                = CONF
 
   console.log(code, msg, data.total)

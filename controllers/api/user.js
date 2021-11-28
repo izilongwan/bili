@@ -5,9 +5,8 @@ const UserModel                   = require('../../models/User'),
       utils                       = require('../../libs/utils')
 
 class User {
-  async login(ctx) {
-    const { params = {} }  = ctx.request.body,
-          { account,
+  async login(params = {}, ctx) {
+    const { account,
             password,
             captcha } = params
 
@@ -48,9 +47,8 @@ class User {
     ctx.session.sessionId = id
   }
 
-  async add(ctx) {
-    const { params = {} } = ctx.request.body,
-          { account,
+  async add(params = {}) {
+    const { account,
             password,
             captcha } = params
 
@@ -87,7 +85,7 @@ class User {
   }
 
   async checkLoginState(ctx) {
-    return ctx.session.sessionId ? COMMON.SUCCESS : ENTRY.NOU_LOGIN
+    return ctx.session.sessionId ? COMMON.SUCCESS : ENTRY.NOT_LOGIN
   }
 
   async checkUserExists(account) {
