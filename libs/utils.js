@@ -33,7 +33,7 @@ const generateDirMap = async (dir) => {
 
   return dirs.reduce((prev, curr) => {
     const key = formatFilename(curr)
-    
+
     if (!privateList.includes(key)) {
       prev[formatFilename(curr)] = require(__dirname + '/../' + dir +'/' + curr)
     }
@@ -136,9 +136,11 @@ const checkFileInfo = async (pathname) => {
     module: null
   };
 
-  const filename = /^\//.test(pathname)
-    ? path.resolve(__dirname, '..' + pathname + '.js')
-    : path.resolve(__dirname, '../controllers/api/' + pathname + '.js')
+  const filename = path.resolve(__dirname,
+    (pathname.includes('.')
+      ? '../' + pathname.replace(/\./g, '/')
+      : '../controllers/api/' + pathname) + '.js'
+  )
   console.log('🚀 ~ file: utils.js ~ line 134 ~ checkFileInfo ~ filename', filename)
 
   try {
@@ -173,13 +175,13 @@ function checkAccess(access) {
   switch (access) {
     case 0:
       return [false, ENTRY.NO_ACCESS]
-      
+
     case 1:
       return [true]
 
     case -1:
       return [false, ENTRY.NOT_LOGIN]
-  
+
     default:
       return [false, ENTRY.NO_ACCESS]
   }

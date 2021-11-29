@@ -16,7 +16,7 @@ const CORS_ORIGIN_LIST = [
 module.exports = {
   EXCLUDE_METHODS: {
     user: ['login', 'logout', 'checkLoginState'],
-    '/service/index': ['*'],
+    'service.index': ['*'],
   },
 
   SESSION_INFO: {

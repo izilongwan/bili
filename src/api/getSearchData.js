@@ -3,12 +3,12 @@ import { req } from './config'
 export function getSearchData (params = {}) {
   return req({
     0: {
-      module: '/service/index',
+      module: 'service.index',
       method: 'searchData',
       params,
     },
     1: {
-      module: '/service/index',
+      module: 'service.index',
       method: 'getData',
       params: {
         field: 'all',
