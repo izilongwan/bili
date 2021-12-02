@@ -1,9 +1,16 @@
 const { COMMON }           = require('../../libs/codeInfo'),
       CrawlerSettings      = require('../../models/CrawlerSettings'),
       { CRAWLER_SETTINGS } = require('../../config/index'),
-      utils                = require('../../libs/utils')
+      utils                = require('../../libs/utils'),
+      schedule             = require('node-schedule')
 
-const { MODELS, CRAWLERS, asyncFunc, createOrUpdateModel } = utils
+const {
+  MODELS,
+  CRAWLERS,
+  asyncFunc,
+  createOrUpdateModel,
+  removeModelHrefs,
+} = utils;
 
 class Crawler {
   constructor() {
@@ -11,12 +18,19 @@ class Crawler {
   }
 
   async init() {
+    await this.generatorBaseSettings()
+    await this.schduleAutoCrawleData()
+  }
+
+  async generatorBaseSettings() {
     let ret = await CrawlerSettings.count()
 
-    if (ret <= 0) {
-      for (const crawlerItem of CRAWLER_SETTINGS) {
-        ret = await CrawlerSettings.create(crawlerItem)
-      }
+    if (ret > 0) {
+      return
+    }
+
+    for (const crawlerItem of CRAWLER_SETTINGS) {
+      ret = await CrawlerSettings.create(crawlerItem)
     }
   }
 
@@ -118,13 +132,15 @@ class Crawler {
       attributes: {
         exclude: ['createdAt']
       },
+      raw: true,
     }
 
     await CrawlerSettings.update({ status: 0 }, conf)
+    const ret0 = await CrawlerSettings.findOne(conf)
 
     return {
       ...COMMON.SUCCESS,
-      data: await CrawlerSettings.findOne(conf)
+      data: Object.assign({ crawleDataLength: data.length }, ret0)
     }
   }
 
@@ -149,7 +165,7 @@ class Crawler {
       try {
         await CrawlerSettings.update({ status: 1 }, conf)
         data = await crawler()
-      } 
+      }
       catch (error) {
         console.log('🚀 ~ file: crawler.js ~ line 159 ~ Crawler ~ crawlerSwitchModel ~ error', error)
       }
@@ -177,9 +193,7 @@ class Crawler {
 
     const modelArrs = []
     const crawlerArrs = []
-
     const { models, crawlers } = await this.getAvariableModelsAndCrawlers()
-
     const modelsMap = Object.entries(models)
 
     for (const [field, model] of modelsMap) {
@@ -187,52 +201,64 @@ class Crawler {
       modelArrs.push(CrawlerSettings.update({ status: 1 }, conf))
     }
 
-    const [err0, data0] = await asyncFunc(
-      () => Promise.all(modelArrs)
-    );
+    let crawleDataLength = 0
 
-    for (const [field, crawler] of Object.entries(crawlers)) {
-      crawlerArrs.push(crawler())
+    try {
+      const [err0, data0] = await asyncFunc(
+        () => Promise.all(modelArrs)
+      );
+
+      for (const [field, crawler] of Object.entries(crawlers)) {
+        crawlerArrs.push(crawler())
+      }
+
+      const [err, allData] = await asyncFunc(
+        () => Promise.all(crawlerArrs)
+      );
+
+      if (err) {
+        return COMMON.CRAWLER_DATA_ERROR
+      }
+
+      const fieldKeys = Object.keys(crawlers)
+
+      const allDataObj = allData.reduce((prev, curr, idx) => (prev[fieldKeys[idx]] = curr, prev),{})
+      console.log('🚀 ~ file: crawler.js ~ line 230 ~ Crawler ~ crawlerDataAll ~ allDataObj', allDataObj)
+
+      modelArrs.length = 0
+
+      for (const [field, model] of modelsMap) {
+        const { where, ...restConf } = conf
+        await removeModelHrefs(model)
+        await createOrUpdateModel(model, allDataObj[field], restConf)
+        crawleDataLength += allDataObj[field].length
+      }
+
+      modelArrs.length = 0
     }
 
-    const [err, allData] = await asyncFunc(
-      () => Promise.all(crawlerArrs)
-    );
-
-    if (err) {
-      return COMMON.CRAWLER_DATA_ERROR
+    catch (error) {
     }
 
-    const fieldKeys = Object.keys(crawlers)
+    finally {
+      for (const [field, model] of modelsMap) {
+        conf.where.field = field
+        modelArrs.push(CrawlerSettings.update({ status: 0 }, conf))
+      }
 
-    const allDataObj = allData.reduce((prev, curr, idx) => (prev[fieldKeys[idx]] = curr, prev),{})
-    console.log('🚀 ~ file: crawler.js ~ line 204 ~ Crawler ~ crawlerDataAll ~ allDataObj', allDataObj)
-
-    modelArrs.length = 0
-
-    for (const [field, model] of modelsMap) {
-      conf.where.field = field
-      await createOrUpdateModel(model, allDataObj[field], conf)
-    }
-
-    modelArrs.length = 0
-
-    for (const [field, model] of modelsMap) {
-      conf.where.field = field
+      conf.where.field = 'all'
       modelArrs.push(CrawlerSettings.update({ status: 0 }, conf))
+
+      const [err1, data1] = await asyncFunc(
+        () => Promise.all(modelArrs)
+      );
+
+      if (err1) {
+        return COMMON.UPDATE_ERROR
+      }
+
+      return Object.assign({ data: { crawleDataLength } }, COMMON.SUCCESS)
     }
-
-    const [err1, data1] = await asyncFunc(
-      () => Promise.all(modelArrs)
-    );
-
-    if (err1) {
-      return COMMON.UPDATE_ERROR
-    }
-
-    console.log(data1.length)
-
-    return COMMON.SUCCESS
   }
 
   async crawlerDataCheckStatus(field, force = 1) {
@@ -281,6 +307,76 @@ class Crawler {
     }
 
     return { models: newModels, crawlers: newCrawlers }
+  }
+
+  async schduleAutoCrawleData() {
+    const { getAutoCrawlerHour } = this
+    const hour = await getAutoCrawlerHour()
+
+    if (!hour) {
+      return
+    }
+
+    this.jobHour = []
+    this.job = schedule.scheduleJob({ minute: hour }, async () => {
+      await this.jobTask(async () => {
+        await this.crawlerDataAll()
+      })
+    })
+  }
+
+  async jobTask(callback) {
+    const hour = await this.getAutoCrawlerHour()
+
+    if (!hour) {
+      return
+    }
+
+    if (hour.toString() === this.jobHour.toString()) {
+      await callback()
+      return
+    }
+
+    this.jobHour = hour
+    this.job && this.job.cancel()
+    this.job = schedule.scheduleJob({ minute: hour }, async () => {
+      console.log(0)
+      await this.jobTask(callback)
+    })
+  }
+
+  async getAutoCrawlerHour() {
+    const [field, id] = ['all', 1]
+    const ret = await CrawlerSettings.findOne({
+      where: {
+        field,
+        id,
+      },
+      // attributes: {
+      //   include: ['duration', 'switch_type', 'status']
+      // },
+      raw: true,
+    })
+
+    // console.log(ret)
+
+    if (!ret) {
+      return
+    }
+
+    const { duration, switch_type, status } = ret
+
+    if (switch_type === 0) {
+      this.job && this.job.cancel()
+      return
+    }
+
+    let { hour } = utils.getTime(duration)
+
+    hour = Array.from({ length: ~~(24 / hour) }, (_, idx) => idx * hour)
+    // console.log('🚀 ~ file: crawler.js ~ line 331 ~ hour', hour)
+
+    return hour
   }
 }
 

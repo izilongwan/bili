@@ -1,6 +1,6 @@
 const UserModel                   = require('../../models/User'),
       { makeCrypto, checkParams } = require('../../libs/utils'),
-      { COMMON }                  = require('../../libs/codeInfo'),
+      { COMMON, ENTRY }           = require('../../libs/codeInfo'),
       Captcha                     = require('./captcha'),
       utils                       = require('../../libs/utils')
 
@@ -77,14 +77,14 @@ class User {
     return COMMON.SUCCESS
   }
 
-  async logout(ctx) {
+  async logout(params, ctx) {
     delete ctx.session.cookie
     delete ctx.session.sessionId
 
     return COMMON.SUCCESS
   }
 
-  async checkLoginState(ctx) {
+  async checkLoginState(params, ctx) {
     return ctx.session.sessionId ? COMMON.SUCCESS : ENTRY.NOT_LOGIN
   }
 

@@ -187,9 +187,7 @@ class Data {
     return { ...COMMON.SUCCESS, data };
   }
 
-  async updateData(ctx) {
-    const { params = {} } = ctx.request.body
-
+  async updateData(params = {}, ctx) {
     let ret = utils.checkParams(params, 'status', 'id', 'field')
 
     if (!ret) {
