@@ -318,7 +318,7 @@ class Crawler {
     }
 
     this.jobHour = []
-    this.job = schedule.scheduleJob({ minute: hour }, async () => {
+    this.job = schedule.scheduleJob({ hour }, async () => {
       await this.jobTask(async () => {
         await this.crawlerDataAll()
       })
@@ -339,8 +339,7 @@ class Crawler {
 
     this.jobHour = hour
     this.job && this.job.cancel()
-    this.job = schedule.scheduleJob({ minute: hour }, async () => {
-      console.log(0)
+    this.job = schedule.scheduleJob({ hour }, async () => {
       await this.jobTask(callback)
     })
   }
