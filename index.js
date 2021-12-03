@@ -17,6 +17,7 @@ const catchError = require('./middleware/catchError')
 const { SESSION_INFO, COOKIE_INFO, REDIS_INFO, corsOrigin } = require('./config');
 
 require('./models/CrawlerSettings')
+require('./controllers/api/crawler')
 
 // error handler
 onerror(app)

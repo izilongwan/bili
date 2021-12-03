@@ -5,7 +5,7 @@ const UserModel                   = require('../../models/User'),
       utils                       = require('../../libs/utils')
 
 class User {
-  async login(params = {}, ctx) {
+  async login(ctx, next, params = {}) {
     const { account,
             password,
             captcha } = params
@@ -47,7 +47,7 @@ class User {
     ctx.session.sessionId = id
   }
 
-  async add(params = {}) {
+  async add(ctx, next, params = {}) {
     const { account,
             password,
             captcha } = params
@@ -77,14 +77,14 @@ class User {
     return COMMON.SUCCESS
   }
 
-  async logout(params, ctx) {
+  async logout(ctx, next, params) {
     delete ctx.session.cookie
     delete ctx.session.sessionId
 
     return COMMON.SUCCESS
   }
 
-  async checkLoginState(params, ctx) {
+  async checkLoginState(ctx, next, params) {
     return ctx.session.sessionId ? COMMON.SUCCESS : ENTRY.NOT_LOGIN
   }
 

@@ -51,7 +51,11 @@ module.exports = {
     CRAWLER_DATA_DOING: {
       code: 1110,
       msg: 'The crawling data now'
-    }
+    },
+    CRAWLER_DATA_ERROR: {
+      code: 1111,
+      msg: 'The crawling data error'
+    },
   },
 
   ENTRY: {

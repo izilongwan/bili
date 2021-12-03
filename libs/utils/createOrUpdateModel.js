@@ -13,13 +13,22 @@ exports.createOrUpdateModel = (Model, data, customConf = {}) => {
 
     author_name && (conf.where.author_name = author_name)
 
-    let ret = await Model.findOne(conf);
+    let ret = null
 
-    ret = ret
-      ? await Model.update(item, conf)
-      : await Model.create(item)
-
-    result.push(ret)
+    try {
+      ret = await Model.findOne(conf);
+  
+      ret = ret
+        ? await Model.update(item, conf)
+        : await Model.create(item)
+    } 
+    catch (error) {
+      console.log('🚀 ~ file: createOrUpdateModel.js ~ line 26 ~ error', error)
+      ret = null
+    }
+    finally {
+      ret && result.push(ret)
+    }
   })
 
   return result

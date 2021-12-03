@@ -85,7 +85,7 @@ class Data {
     }, [])
   }
 
-  async getData (params = {}) {
+  async getData (ctx, next, params = {}) {
     const { field,
             page,
             num,
@@ -140,7 +140,7 @@ class Data {
     return { ...COMMON.SUCCESS, data: ret };
   }
 
-  async searchData (params = {}) {
+  async searchData (ctx, next, params = {}) {
     const { field, kw }   = params
 
     let ret = utils.checkParams(params, 'field', 'kw')
@@ -187,7 +187,7 @@ class Data {
     return { ...COMMON.SUCCESS, data };
   }
 
-  async updateData(params = {}, ctx) {
+  async updateData(ctx, next, params = {}) {
     let ret = utils.checkParams(params, 'status', 'id', 'field')
 
     if (!ret) {

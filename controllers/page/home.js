@@ -1,7 +1,7 @@
 const Service = require('../../service/index'),
       { CONF } = require('../../config');
 
-module.exports = async (ctx) => {
+module.exports = async (ctx, next) => {
   const baseParams = {
     page: 1,
     num: 20
@@ -12,7 +12,7 @@ module.exports = async (ctx) => {
     field: 'all',
   }
 
-  const { code, msg, data = {} } = await Service.getData(params),
+  const { code, msg, data = {} } = await Service.getData(ctx, next, params),
         { index }                = CONF
 
   console.log(code, msg, data.total)

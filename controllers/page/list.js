@@ -1,7 +1,7 @@
 const Service = require('../../service/index'),
       { CONF, NAV } = require('../../config');
 
-module.exports = async (ctx) => {
+module.exports = async (ctx, next) => {
   const { list } = CONF,
         { field } = ctx.params
 
@@ -29,7 +29,7 @@ module.exports = async (ctx) => {
     field,
   }
 
-  const { code, msg, data = {} } = await Service.getData(params)
+  const { code, msg, data = {} } = await Service.getData(ctx, next, params)
 
   if (code !== 0) {
     console.log('index -> msg', msg)

@@ -13,7 +13,7 @@ exports.checkFileInfo = async (pathname) => {
       : '../../controllers/api/' + pathname) + '.js'
   )
 
-  console.log('🚀 ~ file: utils.js ~ line 134 ~ checkFileInfo ~ filename', filename)
+  console.log('🚀 ~ line 134 ~ checkFileInfo', filename)
 
   try {
     const err = await fsPromises.access(filename)
@@ -25,7 +25,7 @@ exports.checkFileInfo = async (pathname) => {
 
   } catch (err) {
     ret.info = err
-    console.log('🚀 ~ file: utils.js ~ line 120 ~ checkFileInfo ~ err', err)
+    console.log('🚀 ~ line 120 ~ checkFileInfo ~ err', err)
   }
 
   return ret

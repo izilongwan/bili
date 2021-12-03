@@ -12,7 +12,8 @@ const { startProcess }            = require('./startProcess.js'),
       { transferNum }             = require('./transferNum'),
       { trimTxt }                 = require('./trimTxt'),
       { updateModelAndReturnRet } = require('./updateModelAndReturnRet'),
-      { removeModelHrefs }        = require('./removeModelHrefs')
+      { removeModelHrefs }        = require('./removeModelHrefs'),
+      { CacheStore }              = require('./CacheStore')
 
 
 module.exports = {
@@ -31,6 +32,7 @@ module.exports = {
   trimTxt,
   updateModelAndReturnRet,
   removeModelHrefs,
+  CacheStore,
   MODELS: generateDirMap('models'),
   CRAWLERS: generateDirMap('crawler'),
 }

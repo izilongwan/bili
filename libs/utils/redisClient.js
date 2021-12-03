@@ -1,6 +1,6 @@
-const red = require('../db/redis')
+const red = require('../../../db/redis')
 
-const redisSet = (key, value, timeout = 60 * 60) => {
+exports.redisSet = (key, value, timeout = 60 * 60) => {
   if (typeof value === 'object') {
     value = JSON.stringify(value);
   }
@@ -9,7 +9,7 @@ const redisSet = (key, value, timeout = 60 * 60) => {
   red.expire(key, timeout);
 }
 
-const redisGet = (key) => {
+exports.redisGet = (key) => {
   return new Promise((resolve, reject) => {
     red.get(key, (err, value) => {
       if (err) {
@@ -23,9 +23,4 @@ const redisGet = (key) => {
       }
     })
   })
-}
-
-module.exports = {
-  redisSet,
-  redisGet
 }

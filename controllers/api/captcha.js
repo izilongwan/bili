@@ -1,14 +1,18 @@
-const captcha    = require('svg-captcha'),
-      { COMMON } = require('../../libs/codeInfo'),
-      { redisSet, redisGet } = require('../../libs/redisClient')
+const captcha        = require('svg-captcha'),
+      { COMMON }     = require('../../libs/codeInfo'),
+      { CacheStore } = require('../../libs/utils/CacheStore')
 
 class Captcha {
-  async create(ctx, next) {
+  async create(ctx, next, params = {}) {
     const ret = captcha.create({
       color: true,
     })
 
-    Captcha.store[ret.text.toLowerCase()] = 1;
+    const key = ret.text.toLowerCase()
+    const { ts = 1000 * 60 * 3 } = params
+
+    this.store.setItem(key, 1, ts)
+
     if (ctx.request.method === 'GET') {
       ctx.body = ret.data
       ctx.type = 'svg'
@@ -23,21 +27,17 @@ class Captcha {
 
   compareCaptcha(text) {
     text = text.toLowerCase()
-    if (Captcha.store[text]) {
-      delete Captcha.store[text]
-      return true
-    }
-
-    return false
+    
+    const ret = this.store.getItem(text)
+    ret && this.store.removeItem(text)
+    return ret
   }
 
   allStore(ctx) {
-    ctx.body = Captcha.store
+    ctx.body = this.store
   }
 
-  static store = {
-    6666:1
-  }
+  store = new CacheStore()
 }
 
 module.exports = new Captcha()

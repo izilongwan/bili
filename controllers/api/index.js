@@ -2,11 +2,11 @@ const { COMMON, ENTRY } = require('../../libs/codeInfo');
 const utils = require('../../libs/utils');
 
 class Api {
-  async entry(ctx) {
-    await Api.prototype.doCheckParams(ctx)
+  async entry(ctx, next) {
+    await this.doCheckParams(ctx, next)
   }
 
-  async doCheckParams(ctx) {
+  async doCheckParams(ctx, next) {
     const { body } = ctx.request,
           {  params = {} } = body
 
@@ -16,7 +16,7 @@ class Api {
       if (Object.hasOwnProperty.call(params, key)) {
         const value = params[key];
 
-        _params[key] = await this.checkParams(value, ctx)
+        _params[key] = await this.checkParams(ctx, next, value)
       }
     }
 
@@ -25,7 +25,7 @@ class Api {
     ctx.body = ret
   }
 
-  async checkParams(value, ctx) {
+  async checkParams(ctx, next, value) {
     if (value == null) {
       return value
     }
@@ -36,7 +36,7 @@ class Api {
 
     let ret = utils.checkParams(value, 'module', 'method')
 
-    const { getReturnParamsInfo } = Api.prototype
+    const { getReturnParamsInfo } = this
     const retBody = {},
           ctxReqBody = {
             module: m,
@@ -71,7 +71,8 @@ class Api {
       }
     }
 
-    ret = await _module[method](value.params, ctx)
+    // 传参 ctx、next、params
+    ret = await _module[method](ctx, next, value.params)
 
     return getReturnParamsInfo(
       ctxReqBody,
@@ -97,7 +98,7 @@ class Api {
   }
 
   getReturnBodyInfo(ctx, info, retBody = {}) {
-    const { getTimeStamp } = Api.prototype
+    const { getTimeStamp } = this
 
     return {
       ...info,

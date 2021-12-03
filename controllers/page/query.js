@@ -1,7 +1,7 @@
 const Service = require('../../service/index'),
       { CONF, SEARCH_NAV } = require('../../config');
 
-module.exports = async (ctx) => {
+module.exports = async (ctx, next) => {
   const { q, field: f } = ctx.query,
         { query }       = CONF,
         field           = f || 'all';
@@ -22,7 +22,7 @@ module.exports = async (ctx) => {
   }
 
   const params = { kw: q, field };
-  const { code, msg, data = {} } = await Service.searchData(params);
+  const { code, msg, data = {} } = await Service.searchData(ctx, next, params);
 
   if (code !== 0) {
     console.log('list -> msg', msg)
