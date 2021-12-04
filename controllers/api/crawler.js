@@ -2,7 +2,9 @@ const { COMMON }           = require('../../libs/codeInfo'),
       CrawlerSettings      = require('../../models/CrawlerSettings'),
       { CRAWLER_SETTINGS } = require('../../config/index'),
       utils                = require('../../libs/utils'),
-      schedule             = require('node-schedule')
+      schedule             = require('node-schedule'),
+      app              = require('../../index');
+const { addErrorArgs } = require('../../libs/utils');
 
 const {
   MODELS,
@@ -13,7 +15,7 @@ const {
 } = utils;
 
 class Crawler {
-  constructor() {
+  constructor(app) {
     this.init()
   }
 
@@ -95,7 +97,7 @@ class Crawler {
     const models = await MODELS
 
     if (field === 'all') {
-      return await this.crawlerDataAll(field)
+      return await this.crawlerDataAll(ctx)
     }
 
     const { status, isExist, data } = await this.crawlerSwitchModel(field)
@@ -147,6 +149,7 @@ class Crawler {
       }
     }
     catch (error) {
+      app.emit('error', addErrorArgs(error))
       finalRet = Object.assign(COMMON.CRAWLER_DATA_ERROR, { msg: error.message })
     }
     finally {
@@ -177,7 +180,7 @@ class Crawler {
         data = await crawler()
       }
       catch (error) {
-        console.log('🚀 ~ file: crawler.js ~ line 159 ~ Crawler ~ crawlerSwitchModel ~ error', error)
+        app.emit('error', addErrorArgs(error))
       }
       finally {
         await CrawlerSettings.update({ status: 0 }, conf)
@@ -196,7 +199,7 @@ class Crawler {
     }
   }
 
-  async crawlerDataAll() {
+  async crawlerDataAll(ctx) {
     const conf = {
       where: { },
     }
@@ -212,6 +215,7 @@ class Crawler {
     }
 
     let crawleDataLength = 0
+    let finalRet = null
 
     try {
       const [err0, data0] = await asyncFunc(
@@ -227,7 +231,7 @@ class Crawler {
       );
 
       if (err) {
-        return COMMON.CRAWLER_DATA_ERROR
+        return finalRet = COMMON.CRAWLER_DATA_ERROR
       }
 
       const fieldKeys = Object.keys(crawlers)
@@ -245,12 +249,7 @@ class Crawler {
       }
 
       modelArrs.length = 0
-    }
 
-    catch (error) {
-    }
-
-    finally {
       for (const [field, model] of modelsMap) {
         conf.where.field = field
         modelArrs.push(CrawlerSettings.update({ status: 0 }, conf))
@@ -263,11 +262,18 @@ class Crawler {
         () => Promise.all(modelArrs)
       );
 
-      if (err1) {
-        return COMMON.UPDATE_ERROR
-      }
+      finalRet = err1
+        ? COMMON.UPDATE_ERROR
+        : Object.assign({ data: { crawleDataLength } }, COMMON.SUCCESS)
+    }
 
-      return Object.assign({ data: { crawleDataLength } }, COMMON.SUCCESS)
+    catch (error) {
+      app.emit('error', addErrorArgs(error), ctx)
+      finalRet.msg = error.msg
+    }
+
+    finally {
+      return finalRet
     }
   }
 
@@ -320,8 +326,7 @@ class Crawler {
   }
 
   async schduleAutoCrawleData() {
-    const { getAutoCrawleScheduleTime } = this
-    const timeOptions = await getAutoCrawleScheduleTime()
+    const timeOptions = await this.getAutoCrawleScheduleTime()
 
     if (!timeOptions) {
       return
@@ -390,4 +395,4 @@ class Crawler {
   }
 }
 
-module.exports = new Crawler()
+module.exports = new Crawler(app)

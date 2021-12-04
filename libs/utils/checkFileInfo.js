@@ -1,5 +1,6 @@
 const fsPromises  = require('fs').promises,
-      { resolve } = require('path')
+      { resolve } = require('path'),
+      app = require('../..')
 
 exports.checkFileInfo = async (pathname) => {
   const ret = {
@@ -23,9 +24,9 @@ exports.checkFileInfo = async (pathname) => {
       ret.exist = true
     }
 
-  } catch (err) {
-    ret.info = err
-    console.log('🚀 ~ line 120 ~ checkFileInfo ~ err', err)
+  } catch (error) {
+    ret.info = error
+    app.emit('error', addErrorArgs(error))
   }
 
   return ret

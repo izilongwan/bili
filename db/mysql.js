@@ -4,14 +4,17 @@ const { conf, base } = MYSQL_CONF;
 
 const seq = new Sequelize(...conf, base);
 
+let t = null
+
 const connect = () => {
   seq
     .sync()
-    .then(() => console.log('MYSQL connect: OK'))
+    .then(() => console.log('----- MYSQL connect: OK -----'))
     .catch((err) => {
-      console.log(`MYSQL connect error: ${ err }`)
-      console.log(`======`)
-      process.nextTick(() => connect())
+      console.log(`----- MYSQL connect error: ${ err } -----`)
+      console.log(`----- MYSQL will reconnect after 5s -----`)
+      clearTimeout(t);
+      t = setTimeout(connect, 1000 * 5);
     });
 }
 

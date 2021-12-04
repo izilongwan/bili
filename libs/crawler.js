@@ -1,6 +1,8 @@
 const pt = require('puppeteer'),
     { trimTxt,
-      transferNum } = require('../libs/utils')
+      transferNum,
+      addErrorArgs } = require('../libs/utils'),
+    app = require('..')
 
 async function autoScroll(maxY) {
   await new Promise((resolve, reject) => {
@@ -25,6 +27,7 @@ async function autoScroll(maxY) {
           }
         }
       } catch (error) {
+        app.emit('error', addErrorArgs(error))
         // console.log('🚀 ~ file: crawler.js ~ line 28 ~ timer ~ error', error)
       }
     }, 120);
@@ -33,40 +36,43 @@ async function autoScroll(maxY) {
 
 const crawler = options => async () => {
 
-  return new Promise(async (resolve, reject) => {
-    const launchConfig = {
-      timeout: 10 * 60 * 1000,
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    }
+  try {
+    return new Promise(async (resolve, reject) => {
+      const launchConfig = {
+        timeout: 10 * 60 * 1000,
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      }
 
-    const bs = await pt.launch(launchConfig),
-          pg = await bs.newPage(),
-          { url, callback } = options,
-          puppeteer_pg_ = 'puppeteer_pg_'
+      const bs = await pt.launch(launchConfig),
+            pg = await bs.newPage(),
+            { url, callback } = options,
+            puppeteer_pg_ = 'puppeteer_pg_'
 
-    await pg.goto(url, {
-      timeout: 30 * 1000,
-      waitUtil: 'networkidel2'
+      await pg.goto(url, {
+        timeout: 30 * 1000,
+        waitUtil: 'networkidel2'
+      })
+
+      await pg
+        .mainFrame()
+        .addScriptTag({ url: 'https://cdn.bootcss.com/jquery/3.2.0/jquery.min.js' })
+
+      await pg.exposeFunction(`${ puppeteer_pg_ }trimTxt`, trimTxt)
+      await pg.exposeFunction(`${ puppeteer_pg_ }transferNum`, transferNum)
+      await pg.exposeFunction(`${ puppeteer_pg_ }autoScroll`, autoScroll)
+
+      const result = await pg.evaluate(callback)
+
+      await bs.close();
+
+      resolve(result)
+      return result
     })
-
-    await pg
-      .mainFrame()
-      .addScriptTag({ url: 'https://cdn.bootcss.com/jquery/3.2.0/jquery.min.js' })
-
-    await pg.exposeFunction(`${ puppeteer_pg_ }trimTxt`, trimTxt)
-    await pg.exposeFunction(`${ puppeteer_pg_ }transferNum`, transferNum)
-    await pg.exposeFunction(`${ puppeteer_pg_ }autoScroll`, autoScroll)
-
-    const result = await pg.evaluate(callback)
-
-    await bs.close();
-
-    resolve(result)
-
-    return result
-  })
-
+  } catch (error) {
+    app.emit('error', addErrorArgs(error))
+    return []
+  }
 }
 
 module.exports = crawler;

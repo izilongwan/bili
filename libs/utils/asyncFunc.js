@@ -4,8 +4,8 @@ exports.asyncFunc = async (fn) => {
 
     return [null, data];
 
-  } catch (err) {
+  } catch (error) {
 
-    return [err, null];
+    return [error, null];
   }
 }

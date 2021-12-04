@@ -1,3 +1,5 @@
+const { addErrorArgs } = require('../libs/utils')
+
 module.exports = async (ctx, next) => {
   try {
     await next()
@@ -6,6 +8,6 @@ module.exports = async (ctx, next) => {
 
     ctx.status = status
     ctx.body = error
-    ctx.app.emit('error', error, ctx)
+    ctx.app.emit('error', addErrorArgs(error), ctx)
   }
 }

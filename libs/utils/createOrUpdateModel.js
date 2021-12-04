@@ -1,3 +1,6 @@
+const app = require('../..');
+const { addErrorArgs } = require('./addErrorArgs');
+
 exports.createOrUpdateModel = (Model, data, customConf = {}) => {
   const result = [];
 
@@ -17,13 +20,13 @@ exports.createOrUpdateModel = (Model, data, customConf = {}) => {
 
     try {
       ret = await Model.findOne(conf);
-  
+
       ret = ret
         ? await Model.update(item, conf)
         : await Model.create(item)
-    } 
+    }
     catch (error) {
-      console.log('🚀 ~ file: createOrUpdateModel.js ~ line 26 ~ error', error)
+      app.emit('error', addErrorArgs(error))
       ret = null
     }
     finally {

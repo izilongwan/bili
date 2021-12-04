@@ -26,9 +26,9 @@ export const asyncFunc = async (fn) => {
 		}
 
     return [null, ret]
-  } catch (err) {
-    err.message && (err.msg = err.message)
-    return [true, err];
+  } catch (error) {
+    error.message && (error.msg = error.message)
+    return [true, error];
   }
 }
 

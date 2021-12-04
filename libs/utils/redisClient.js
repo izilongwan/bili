@@ -1,4 +1,6 @@
-const red = require('../../../db/redis')
+const app = require('../..');
+const red = require('../../../db/redis');
+const { addErrorArgs } = require('./addErrorArgs');
 
 exports.redisSet = (key, value, timeout = 60 * 60) => {
   if (typeof value === 'object') {
@@ -18,7 +20,8 @@ exports.redisGet = (key) => {
 
       try {
         resolve(JSON.parse(value));
-      } catch (err) {
+      } catch (error) {
+        app.emit('error', addErrorArgs(error))
         resolve(value);
       }
     })

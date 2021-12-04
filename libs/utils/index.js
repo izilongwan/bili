@@ -13,7 +13,9 @@ const { startProcess }            = require('./startProcess.js'),
       { trimTxt }                 = require('./trimTxt'),
       { updateModelAndReturnRet } = require('./updateModelAndReturnRet'),
       { removeModelHrefs }        = require('./removeModelHrefs'),
-      { CacheStore }              = require('./CacheStore')
+      { CacheStore }              = require('./CacheStore'),
+      { addErrorArgs }            = require('./addErrorArgs'),
+      { logger }                  = require('./logger')
 
 
 module.exports = {
@@ -33,6 +35,8 @@ module.exports = {
   updateModelAndReturnRet,
   removeModelHrefs,
   CacheStore,
+  addErrorArgs,
+  logger,
   MODELS: generateDirMap('models'),
   CRAWLERS: generateDirMap('crawler'),
 }

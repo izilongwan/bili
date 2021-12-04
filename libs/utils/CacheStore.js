@@ -1,3 +1,6 @@
+const app = require('../..')
+const { addErrorArgs } = require('./addErrorArgs')
+
 exports.CacheStore = class {
 
   store = {}
@@ -6,8 +9,8 @@ exports.CacheStore = class {
   setItem(key, value, ts = this.ts) {
     const data = {
       value,
-      ts: ts >= 0 
-        ? Date.now() + ts 
+      ts: ts >= 0
+        ? Date.now() + ts
         : -1,
     }
 
@@ -15,6 +18,7 @@ exports.CacheStore = class {
       return Reflect.set(this.store, key, JSON.stringify(data))
     }
     catch (error) {
+      app.emit('error', addErrorArgs(error))
       return false
     }
   }

@@ -11,13 +11,18 @@ const koaStatic = require('koa-static')
 
 const api = require('./routes/api')
 const page = require('./routes/page')
+const { logger } = require('./libs/utils')
 
 const catchError = require('./middleware/catchError')
 
 const { SESSION_INFO, COOKIE_INFO, REDIS_INFO, corsOrigin } = require('./config');
 
-require('./models/CrawlerSettings')
-require('./controllers/api/crawler')
+const port = 5001
+
+setTimeout(() => {
+  require('./models/CrawlerSettings')
+  require('./controllers/api/crawler')
+}, 1000 * 5);
 
 // error handler
 onerror(app)
@@ -70,9 +75,13 @@ app.use(api.routes(), api.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {
-  console.error('server error', err, ctx)
+  const log = logger(__dirname + '/logs')
+  console.log('--------------------------Server Error--------------------------');
+  log.log(err)
+  console.log(err)
+  console.log('--------------------------Server Error--------------------------');
 });
 
-app.listen(5001, () => console.log('running'))
+app.listen(port, () => console.log(`Server is running on PORT ${ port }`))
 
-// module.exports = app
+module.exports = app

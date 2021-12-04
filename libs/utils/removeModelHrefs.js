@@ -1,3 +1,6 @@
+const app = require('../..')
+const { addErrorArgs } = require('./addErrorArgs')
+
 exports.removeModelHrefs = async (Model, limit = 200, customConf = {}) => {
   const count = await Model.count()
 
@@ -31,6 +34,7 @@ exports.removeModelHrefs = async (Model, limit = 200, customConf = {}) => {
     })
 
   } catch (error) {
+    app.emit('error', addErrorArgs(error))
     console.log('🚀 ~ file: removeModelHrefs.js ~ line 23 ~ error', error)
   }
 }
