@@ -1,10 +1,11 @@
 const { COMMON }           = require('../../libs/codeInfo'),
       CrawlerSettings      = require('../../models/CrawlerSettings'),
-      { CRAWLER_SETTINGS } = require('../../config/index'),
+      { CRAWLER_SETTINGS,
+        CRAWL_INTERVAL, } = require('../../config/index'),
       utils                = require('../../libs/utils'),
       schedule             = require('node-schedule'),
-      app              = require('../../index');
-const { addErrorArgs } = require('../../libs/utils');
+      app                  = require('../../index'),
+      { addErrorArgs }     = require('../../libs/utils')
 
 const {
   MODELS,
@@ -218,26 +219,42 @@ class Crawler {
     let finalRet = null
 
     try {
-      const [err0, data0] = await asyncFunc(
-        () => Promise.all(modelArrs)
-      );
+      // const [err0, data0] = await asyncFunc(
+      //   () => Promise.all(modelArrs)
+      // );
+
+      const allData = []
 
       for (const [field, crawler] of Object.entries(crawlers)) {
         crawlerArrs.push(crawler())
+        console.log('=========START')
+        const [err10, data10] = await new Promise(resolve => {
+          setTimeout(() => {
+            resolve(asyncFunc(crawler))
+          }, CRAWL_INTERVAL)
+        })
+        console.log('=========END')
+
+        if (err10) {
+          app.emit('error', addErrorArgs(err10), ctx)
+          return finalRet = COMMON.CRAWLER_DATA_ERROR
+        }
+
+        allData.push(data10)
       }
 
-      const [err, allData] = await asyncFunc(
-        () => Promise.all(crawlerArrs)
-      );
+      // const [err, allData] = await asyncFunc(
+      //   () => Promise.all(crawlerArrs)
+      // );
 
-      if (err) {
-        return finalRet = COMMON.CRAWLER_DATA_ERROR
-      }
+      // if (err) {
+      //   return finalRet = COMMON.CRAWLER_DATA_ERROR
+      // }
 
       const fieldKeys = Object.keys(crawlers)
 
       const allDataObj = allData.reduce((prev, curr, idx) => (prev[fieldKeys[idx]] = curr, prev),{})
-      console.log('🚀 ~ file: crawler.js ~ line 230 ~ Crawler ~ crawlerDataAll ~ allDataObj', allDataObj)
+      console.log('🚀 ~ file: crawler.js ~ line 230 ~ allDataObj', allDataObj)
 
       modelArrs.length = 0
 

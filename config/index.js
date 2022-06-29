@@ -9,7 +9,7 @@ const CORS_ORIGIN_LIST = [
   'http://47.107.72.91',
   'http://47.107.72.91:5002',
   'https://admin-bili.vercel.app',
-  /http:\/\/47\.107\.72\.91/, 
+  /http:\/\/47\.107\.72\.91/,
   /\.letme\.site$/,
 ]
 
@@ -220,5 +220,7 @@ module.exports = {
     { field: 'rookie', text: '新人' },
     { field: 'bangumi', text: '新番' },
     { field: 'movie', text: '电影' },
-  ]
+  ],
+
+  CRAWL_INTERVAL: 1000 * 60,
 }
