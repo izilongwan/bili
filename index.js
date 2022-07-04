@@ -19,10 +19,10 @@ const { SESSION_INFO, COOKIE_INFO, REDIS_INFO, corsOrigin } = require('./config'
 
 const port = 5001
 
-setTimeout(() => {
-  require('./models/CrawlerSettings')
-  require('./controllers/api/crawler')
-}, 1000 * 5);
+// setTimeout(() => {
+//   require('./models/CrawlerSettings')
+//   require('./controllers/api/crawler')
+// }, 1000 * 5);
 
 // error handler
 onerror(app)

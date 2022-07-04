@@ -26,7 +26,7 @@ exports.createOrUpdateModel = (Model, data, customConf = {}) => {
         : await Model.create(item)
     }
     catch (error) {
-      app.emit('error', addErrorArgs(error))
+      addErrorArgs(error)
       ret = null
     }
     finally {

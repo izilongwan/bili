@@ -219,21 +219,23 @@ class Crawler {
     let finalRet = null
 
     try {
-      // const [err0, data0] = await asyncFunc(
-      //   () => Promise.all(modelArrs)
-      // );
-
       const allData = []
+      const timeObj = {}
 
       for (const [field, crawler] of Object.entries(crawlers)) {
         crawlerArrs.push(crawler())
-        console.log('=========START')
+        console.log(`[${ field }]=========START`)
+
         const [err10, data10] = await new Promise(resolve => {
-          setTimeout(() => {
-            resolve(asyncFunc(crawler))
+          setTimeout(async () => {
+            const start = Date.now()
+
+            resolve(await asyncFunc(crawler))
+            timeObj[field] = Date.now() - start
           }, CRAWL_INTERVAL)
         })
-        console.log('=========END')
+
+        console.log(`[${ field }]=========END`)
 
         if (err10) {
           app.emit('error', addErrorArgs(err10), ctx)
@@ -243,45 +245,47 @@ class Crawler {
         allData.push(data10)
       }
 
-      // const [err, allData] = await asyncFunc(
-      //   () => Promise.all(crawlerArrs)
-      // );
-
-      // if (err) {
-      //   return finalRet = COMMON.CRAWLER_DATA_ERROR
-      // }
-
       const fieldKeys = Object.keys(crawlers)
 
       const allDataObj = allData.reduce((prev, curr, idx) => (prev[fieldKeys[idx]] = curr, prev),{})
-      console.log('🚀 ~ file: crawler.js ~ line 230 ~ allDataObj', allDataObj)
+      // console.log('🚀 ~ file: crawler.js ~ line 230 ~ allDataObj', allDataObj)
 
       modelArrs.length = 0
 
       for (const [field, model] of modelsMap) {
         const { where, ...restConf } = conf
+
+        conf.where.field = field
+
         await removeModelHrefs(model)
         await createOrUpdateModel(model, allDataObj[field], restConf)
+        await new Promise((resolve) => {
+          setTimeout(async () => {
+            await CrawlerSettings.update({ status: 0 }, conf)
+
+            resolve()
+          }, timeObj[field])
+        })
+
         crawleDataLength += allDataObj[field].length
       }
 
-      modelArrs.length = 0
-
-      for (const [field, model] of modelsMap) {
-        conf.where.field = field
-        modelArrs.push(CrawlerSettings.update({ status: 0 }, conf))
-      }
-
       conf.where.field = 'all'
-      modelArrs.push(CrawlerSettings.update({ status: 0 }, conf))
+      await CrawlerSettings.update({ status: 0 }, conf)
 
-      const [err1, data1] = await asyncFunc(
-        () => Promise.all(modelArrs)
-      );
+      const settingsConf = {
+        where: {
+          switch_type: 1
+        },
+        attributes: {
+          exclude: ['createdAt', 'title', 'id', 'duration', 'status'],
+          // include: ['updatedAt', 'field'],
+        },
+        raw: true,
+      }
+      const rs = await CrawlerSettings.findAll(settingsConf)
 
-      finalRet = err1
-        ? COMMON.UPDATE_ERROR
-        : Object.assign({ data: { crawleDataLength } }, COMMON.SUCCESS)
+      finalRet = Object.assign({ data: { crawleDataLength, data: rs } }, COMMON.SUCCESS)
     }
 
     catch (error) {

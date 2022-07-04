@@ -9,7 +9,12 @@ let t = null
 const connect = () => {
   seq
     .sync()
-    .then(() => console.log('----- MYSQL connect: OK -----'))
+    .then(() => {
+      require('../models/CrawlerSettings')
+      require('../controllers/api/crawler')
+      console.log('----- MYSQL connect: OK -----')
+      return null
+    })
     .catch((err) => {
       console.log(`----- MYSQL connect error: ${ err } -----`)
       console.log(`----- MYSQL will reconnect after 5s -----`)
