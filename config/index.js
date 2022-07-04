@@ -222,5 +222,5 @@ module.exports = {
     { field: 'movie', text: '电影' },
   ],
 
-  CRAWL_INTERVAL: 1000 * 60,
+  CRAWL_INTERVAL: 1000 * (isProd ? 20 : 3),
 }
