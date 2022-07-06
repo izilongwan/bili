@@ -10,7 +10,7 @@ const connect = () => {
   seq
     .sync()
     .then(() => {
-      require('../models/CrawlerSettings')
+      require('../models')
       require('../controllers/api/crawler')
       console.log('----- MYSQL connect: OK -----')
       return null

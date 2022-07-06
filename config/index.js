@@ -1,4 +1,5 @@
 const { REDIS_CONF } = require('./db')
+const EVAL_STR = require('./pageElementEvalStr')
 
 const isProd = process.env.NODE_ENV === 'production' ? true : false,
       BASE_URL = isProd
@@ -222,5 +223,68 @@ module.exports = {
     { field: 'movie', text: '电影' },
   ],
 
-  CRAWL_INTERVAL: 1000 * (isProd ? 20 : 3),
+  CRAWL_INTERVAL: 1000 * (isProd ? 10 : 1),
+
+  PAGE_ELEMENT: [
+    {
+      url: 'https://www.bilibili.com/',
+      text: '轮播图',
+      field: 'carousel',
+      originEvalStr: EVAL_STR.carousel,
+      evalStr: EVAL_STR.carousel,
+    },
+    {
+      url: 'https://www.bilibili.com/',
+      text: '日常记录',
+      field: 'record',
+    },
+    {
+      text: '推广',
+      url: 'https://www.bilibili.com/',
+      field: 'promote',
+    },
+    {
+      url: 'https://www.bilibili.com/',
+      text: '电竞赛事',
+      field: 'e_sports',
+    },
+    {
+      url: 'https://www.bilibili.com/',
+      text: '直播ing',
+      field: 'live',
+    },
+    {
+      url: 'https://www.bilibili.com/',
+      text: '全站榜',
+      field: 'full',
+    },
+    {
+      url: 'https://www.bilibili.com/',
+      text: '原创榜',
+      field: 'origin',
+    },
+    {
+      url: 'https://www.bilibili.com/',
+      text: '新番榜',
+      field: 'bangumi',
+    },
+    {
+      url: 'https://www.bilibili.com/movie',
+      text: '电影榜',
+      field: 'movie',
+      originEvalStr: EVAL_STR.movie,
+      evalStr: EVAL_STR.movie,
+    },
+    {
+      url: 'https://www.bilibili.com/',
+      text: '新人榜',
+      field: 'rookie',
+    },
+  ],
+
+  LAUNCH_CONFIG: {
+    timeout: 10 * 60 * 1000,
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  }
 }

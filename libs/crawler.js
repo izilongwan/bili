@@ -1,10 +1,14 @@
 const pt = require('puppeteer'),
-    { trimTxt,
-      transferNum,
-      addErrorArgs } = require('../libs/utils'),
-    app = require('..')
+      { trimTxt,
+        transferNum,
+        addErrorArgs
+      } = require('../libs/utils'),
+      app = require('..')
 
-async function autoScroll(maxY) {
+const { LAUNCH_CONFIG, CRAWL_INTERVAL } = require('../config')
+const PageElement = require('../models/PageElement')
+
+async function autoScroll(getLastCallback, maxY) {
   await new Promise((resolve, reject) => {
     let totalHeight = 0,
         distance    = 100
@@ -13,21 +17,20 @@ async function autoScroll(maxY) {
       try {
         window.scrollBy(0, distance);
         totalHeight += distance;
+        const y = max === Infinity
+          ? document.body.scrollHeight - window.innerHeight
+          : maxY
 
-        if (totalHeight >= maxY) {
-          const $lastItem = $('.rank-list .rank-item .content').last(),
-                lastImgSrc = $lastItem.find('a img').prop('src'),
-                reg = /https?:/
+        if (totalHeight >= y) {
+          const reg = /https?:/
 
           // 防止图片取的是懒加载的图片
-          console.log('🚀 ~ file: full.js ~ line 29 ~ timer ~ lastImgSrc', lastImgSrc)
-          if (reg.test(lastImgSrc)) {
+          if (reg.test(getLastCallback())) {
             clearInterval(timer);
             resolve();
           }
         }
       } catch (error) {
-        app.emit('error', addErrorArgs(error))
         // console.log('🚀 ~ file: crawler.js ~ line 28 ~ timer ~ error', error)
       }
     }, 120);
@@ -36,18 +39,27 @@ async function autoScroll(maxY) {
 
 const crawler = options => async () => {
 
-  try {
-    return new Promise(async (resolve, reject) => {
-      const launchConfig = {
-        timeout: 10 * 60 * 1000,
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  return new Promise(async (resolve, reject) => {
+    let bs = null
+
+    try {
+      bs = await pt.launch(LAUNCH_CONFIG)
+
+      const pg = await bs.newPage(),
+            { field } = options,
+            puppeteer_pg_ = 'puppeteer_pg_'
+
+      const conf = {
+        where: {
+          field,
+        },
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'text', 'id', 'status'],
+        },
+        raw: true,
       }
 
-      const bs = await pt.launch(launchConfig),
-            pg = await bs.newPage(),
-            { url, callback } = options,
-            puppeteer_pg_ = 'puppeteer_pg_'
+      const { evalStr, url } = await PageElement.findOne(conf)
 
       await pg.goto(url, {
         timeout: 30 * 1000,
@@ -62,17 +74,18 @@ const crawler = options => async () => {
       await pg.exposeFunction(`${ puppeteer_pg_ }transferNum`, transferNum)
       await pg.exposeFunction(`${ puppeteer_pg_ }autoScroll`, autoScroll)
 
-      const result = await pg.evaluate(callback)
+      const result = await pg.evaluate(({ evalStr }) => {
+        return eval(evalStr)
+      }, { evalStr })
 
-      await bs.close();
+      setTimeout(() => resolve(result), CRAWL_INTERVAL)
 
-      resolve(result)
-      return result
-    })
-  } catch (error) {
-    app.emit('error', addErrorArgs(error))
-    return []
-  }
+    } catch (error) {
+      reject(error)
+    }
+
+    bs && await bs.close()
+  })
 }
 
 module.exports = crawler;

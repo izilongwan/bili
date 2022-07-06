@@ -1,15 +1,14 @@
 const { COMMON }           = require('../../libs/codeInfo'),
       CrawlerSettings      = require('../../models/CrawlerSettings'),
-      { CRAWLER_SETTINGS,
-        CRAWL_INTERVAL, } = require('../../config/index'),
+      { CRAWLER_SETTINGS } = require('../../config/index'),
       utils                = require('../../libs/utils'),
       schedule             = require('node-schedule'),
       app                  = require('../../index'),
-      { addErrorArgs }     = require('../../libs/utils')
+      { addErrorArgs }     = require('../../libs/utils'),
+      crawler = require('../../libs/crawler')
 
 const {
   MODELS,
-  CRAWLERS,
   asyncFunc,
   createOrUpdateModel,
   removeModelHrefs,
@@ -113,7 +112,7 @@ class Crawler {
 
     const model = models[field]
 
-    console.log('🚀 ~ file: crawler.js ~ line 89 ~ data', data.slice(-2), data.length)
+    // console.log('🚀 ~ file: crawler.js ~ line 89 ~ data', data.slice(-2), data.length)
 
     let finalRet = null
 
@@ -159,7 +158,7 @@ class Crawler {
   }
 
   async crawlerSwitchModel(field, force = 1) {
-    const crawler = (await CRAWLERS)[field]
+    // const crawler = (await CRAWLERS)[field]
 
     const conf = {
       where: {
@@ -175,10 +174,10 @@ class Crawler {
 
     let data = []
 
-    if (crawler) {
+    // if (crawler) {
       try {
         await CrawlerSettings.update({ status: 1 }, conf)
-        data = await crawler()
+        data = await crawler({ field })()
       }
       catch (error) {
         app.emit('error', addErrorArgs(error))
@@ -192,12 +191,12 @@ class Crawler {
         isExist: true,
         data
       }
-    }
+    // }
 
-    return {
-      status: 0,
-      isExist: false,
-    }
+    // return {
+    //   status: 0,
+    //   isExist: false,
+    // }
   }
 
   async crawlerDataAll(ctx) {
@@ -224,22 +223,19 @@ class Crawler {
 
       for (const [field, crawler] of Object.entries(crawlers)) {
         crawlerArrs.push(crawler())
-        console.log(`[${ field }]=========START`)
+        console.log(`[START]====${ field }`)
 
-        const [err10, data10] = await new Promise(resolve => {
-          setTimeout(async () => {
-            const start = Date.now()
+        const start = Date.now()
+        const [err10, data10] = await asyncFunc(crawler)
 
-            resolve(await asyncFunc(crawler))
-            timeObj[field] = Date.now() - start
-          }, CRAWL_INTERVAL)
-        })
+        timeObj[field] = Date.now() - start
 
-        console.log(`[${ field }]=========END`)
+        console.log(`[END]====${ field }  ${ timeObj[field] }ms`)
 
         if (err10) {
           app.emit('error', addErrorArgs(err10), ctx)
-          return finalRet = COMMON.CRAWLER_DATA_ERROR
+          finalRet = COMMON.CRAWLER_DATA_ERROR
+          return
         }
 
         allData.push(data10)
@@ -318,7 +314,7 @@ class Crawler {
 
   async getAvariableModelsAndCrawlers () {
     const models = await MODELS
-    const crawlers = await CRAWLERS
+    // const crawlers = await CRAWLERS
     const settingsConf = {
       where: {
         switch_type: 1
@@ -339,7 +335,7 @@ class Crawler {
     for (const field in fieldObj) {
       if (Object.hasOwnProperty.call(fieldObj, field)) {
         models[field] && (newModels[field] = models[field])
-        crawlers[field] && (newCrawlers[field] = crawlers[field])
+        newCrawlers[field] = crawler({ field })
       }
     }
 
@@ -363,7 +359,7 @@ class Crawler {
 
   async jobTask(callback) {
     const timeOptions = await this.getAutoCrawleScheduleTime()
-    console.log('🚀 ~ line 340 ~ timeOptions', timeOptions)
+    // console.log('🚀 ~ line 340 ~ timeOptions', timeOptions)
 
     if (!timeOptions) {
       return

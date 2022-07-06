@@ -38,5 +38,4 @@ module.exports = {
   addErrorArgs,
   logger,
   MODELS: generateDirMap('models'),
-  CRAWLERS: generateDirMap('crawler'),
 }
