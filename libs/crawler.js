@@ -6,7 +6,7 @@ const pt = require('puppeteer'),
       app = require('..')
 
 const { LAUNCH_CONFIG, CRAWL_INTERVAL } = require('../config')
-const PageElement = require('../models/PageElement')
+const CrawlerSettings = require('../models/CrawlerSettings')
 
 async function autoScroll(getLastCallback, maxY) {
   await new Promise((resolve, reject) => {
@@ -54,12 +54,12 @@ const crawler = options => async () => {
           field,
         },
         attributes: {
-          exclude: ['createdAt', 'updatedAt', 'text', 'id', 'status'],
+          exclude: ['createdAt', 'updatedAt', 'title', 'id', 'status'],
         },
         raw: true,
       }
 
-      const { evalStr, url } = await PageElement.findOne(conf)
+      const { evalStr, url } = await CrawlerSettings.findOne(conf)
 
       await pg.goto(url, {
         timeout: 30 * 1000,

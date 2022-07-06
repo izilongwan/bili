@@ -112,12 +112,12 @@ class Crawler {
 
     const model = models[field]
 
-    // console.log('🚀 ~ file: crawler.js ~ line 89 ~ data', data.slice(-2), data.length)
+    // console.log('🚀 ~ ~ line 89 ~ data', data, 115)
 
     let finalRet = null
 
     try {
-      if (data.length > 0) {
+      if (data && data.length > 0) {
         if (!model) {
           return COMMON.MODELS_NOT_EXIST
         }
@@ -174,29 +174,22 @@ class Crawler {
 
     let data = []
 
-    // if (crawler) {
-      try {
-        await CrawlerSettings.update({ status: 1 }, conf)
-        data = await crawler({ field })()
-      }
-      catch (error) {
-        app.emit('error', addErrorArgs(error))
-      }
-      finally {
-        await CrawlerSettings.update({ status: 0 }, conf)
-      }
+    try {
+      await CrawlerSettings.update({ status: 1 }, conf)
+      data = await crawler({ field })()
+    }
+    catch (error) {
+      app.emit('error', addErrorArgs(error))
+    }
+    finally {
+      await CrawlerSettings.update({ status: 0 }, conf)
+    }
 
-      return {
-        status: 0,
-        isExist: true,
-        data
-      }
-    // }
-
-    // return {
-    //   status: 0,
-    //   isExist: false,
-    // }
+    return {
+      status: 0,
+      isExist: true,
+      data
+    }
   }
 
   async crawlerDataAll(ctx) {

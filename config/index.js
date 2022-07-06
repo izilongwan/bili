@@ -1,5 +1,5 @@
 const { REDIS_CONF } = require('./db')
-const EVAL_STR = require('./pageElementEvalStr')
+const { CRAWLER_SETTINGS, CRAWL_INTERVAL, LAUNCH_CONFIG } = require('./crawler')
 
 const isProd = process.env.NODE_ENV === 'production' ? true : false,
       BASE_URL = isProd
@@ -15,6 +15,8 @@ const CORS_ORIGIN_LIST = [
 ]
 
 module.exports = {
+  isProd,
+
   EXCLUDE_METHODS: {
     user: ['login', 'logout', 'checkLoginState'],
     'service.index': ['*'],
@@ -164,52 +166,7 @@ module.exports = {
     { text: '电影', field: 'movie' },
   ],
 
-  CRAWLER_SETTINGS: [
-    {
-      title: '爬取所有数据',
-      field: 'all',
-    },
-    {
-      title: '轮播图数据',
-      field: 'carousel',
-    },
-    {
-      title: '日常记录数据',
-      field: 'record',
-    },
-    {
-      title: '推广数据',
-      field: 'promote',
-    },
-    {
-      title: '电竞赛事数据',
-      field: 'e_sports',
-    },
-    {
-      title: '直播ing数据',
-      field: 'live',
-    },
-    {
-      title: '全站榜数据',
-      field: 'full',
-    },
-    {
-      title: '原创榜数据',
-      field: 'origin',
-    },
-    {
-      title: '新番榜数据',
-      field: 'bangumi',
-    },
-    {
-      title: '电影榜数据',
-      field: 'movie',
-    },
-    {
-      title: '新人榜数据',
-      field: 'rookie',
-    },
-  ],
+  CRAWLER_SETTINGS,
 
    SEARCH_NAV : [
     { field: 'all', text: '全部' },
@@ -223,68 +180,7 @@ module.exports = {
     { field: 'movie', text: '电影' },
   ],
 
-  CRAWL_INTERVAL: 1000 * (isProd ? 10 : 1),
+  CRAWL_INTERVAL,
 
-  PAGE_ELEMENT: [
-    {
-      url: 'https://www.bilibili.com/',
-      text: '轮播图',
-      field: 'carousel',
-      originEvalStr: EVAL_STR.carousel,
-      evalStr: EVAL_STR.carousel,
-    },
-    {
-      url: 'https://www.bilibili.com/',
-      text: '日常记录',
-      field: 'record',
-    },
-    {
-      text: '推广',
-      url: 'https://www.bilibili.com/',
-      field: 'promote',
-    },
-    {
-      url: 'https://www.bilibili.com/',
-      text: '电竞赛事',
-      field: 'e_sports',
-    },
-    {
-      url: 'https://www.bilibili.com/',
-      text: '直播ing',
-      field: 'live',
-    },
-    {
-      url: 'https://www.bilibili.com/',
-      text: '全站榜',
-      field: 'full',
-    },
-    {
-      url: 'https://www.bilibili.com/',
-      text: '原创榜',
-      field: 'origin',
-    },
-    {
-      url: 'https://www.bilibili.com/',
-      text: '新番榜',
-      field: 'bangumi',
-    },
-    {
-      url: 'https://www.bilibili.com/movie',
-      text: '电影榜',
-      field: 'movie',
-      originEvalStr: EVAL_STR.movie,
-      evalStr: EVAL_STR.movie,
-    },
-    {
-      url: 'https://www.bilibili.com/',
-      text: '新人榜',
-      field: 'rookie',
-    },
-  ],
-
-  LAUNCH_CONFIG: {
-    timeout: 10 * 60 * 1000,
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  }
+  LAUNCH_CONFIG,
 }

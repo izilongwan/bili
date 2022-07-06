@@ -1,5 +1,5 @@
 const seq = require('../db/mysql')
-const { INTEGER, STRING, BIGINT } = require('sequelize');
+const { INTEGER, TEXT, STRING, BIGINT } = require('sequelize')
 
 const CrawlerSettings = seq.define('crawlerSettings', {
   title: {
@@ -10,6 +10,24 @@ const CrawlerSettings = seq.define('crawlerSettings', {
   field: {
     type: STRING,
     allowNull: false,
+  },
+
+  url: {
+    type: STRING,
+    allowNull: false,
+    defaultValue: '',
+  },
+
+  evalStr: {
+    type: TEXT,
+    allowNull: false,
+    defaultValue: '',
+  },
+
+  originEvalStr: {
+    type: TEXT,
+    allowNull: false,
+    defaultValue: '',
   },
 
   duration: {

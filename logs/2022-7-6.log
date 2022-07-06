@@ -1,0 +1,66 @@
+[7/6/2022, 10:35:12 PM] TypeError: Cannot read property 'length' of undefined
+    at Crawler.crawlerData (/Users/izilong/Proj/bili/controllers/api/crawler.js:120:16)
+    at async Api.checkParams (/Users/izilong/Proj/bili/controllers/api/index.js:75:11)
+    at async Api.doCheckParams (/Users/izilong/Proj/bili/controllers/api/index.js:19:24)
+    at async Api.entry (/Users/izilong/Proj/bili/controllers/api/index.js:6:5)
+    at async checkAccess (/Users/izilong/Proj/bili/middleware/checkAccess.js:33:3)
+    at async /Users/izilong/Proj/bili/index.js:69:3 {
+  error_reason: "TypeError: Cannot read property 'length' of undefined",
+  where: '/Users/izilong/Proj/bili/controllers/api/crawler.js:120:16'
+} 
+
+[7/6/2022, 10:37:33 PM] TypeError: Cannot read property 'length' of undefined
+    at Crawler.crawlerData (/Users/izilong/Proj/bili/controllers/api/crawler.js:120:16)
+    at async Api.checkParams (/Users/izilong/Proj/bili/controllers/api/index.js:75:11)
+    at async Api.doCheckParams (/Users/izilong/Proj/bili/controllers/api/index.js:19:24)
+    at async Api.entry (/Users/izilong/Proj/bili/controllers/api/index.js:6:5)
+    at async checkAccess (/Users/izilong/Proj/bili/middleware/checkAccess.js:33:3)
+    at async /Users/izilong/Proj/bili/index.js:69:3 {
+  error_reason: "TypeError: Cannot read property 'length' of undefined",
+  where: '/Users/izilong/Proj/bili/controllers/api/crawler.js:120:16'
+} 
+
+[7/6/2022, 10:38:25 PM] TypeError: Cannot read property 'length' of undefined
+    at Crawler.crawlerData (/Users/izilong/Proj/bili/controllers/api/crawler.js:115:53)
+    at async Api.checkParams (/Users/izilong/Proj/bili/controllers/api/index.js:75:11)
+    at async Api.doCheckParams (/Users/izilong/Proj/bili/controllers/api/index.js:19:24)
+    at async Api.entry (/Users/izilong/Proj/bili/controllers/api/index.js:6:5)
+    at async checkAccess (/Users/izilong/Proj/bili/middleware/checkAccess.js:33:3)
+    at async /Users/izilong/Proj/bili/index.js:69:3 {
+  error_reason: "TypeError: Cannot read property 'length' of undefined",
+  where: '/Users/izilong/Proj/bili/controllers/api/crawler.js:115:53'
+} 
+
+[7/6/2022, 10:38:59 PM] TypeError: Cannot read property 'length' of undefined
+    at Crawler.crawlerData (/Users/izilong/Proj/bili/controllers/api/crawler.js:120:16)
+    at async Api.checkParams (/Users/izilong/Proj/bili/controllers/api/index.js:75:11)
+    at async Api.doCheckParams (/Users/izilong/Proj/bili/controllers/api/index.js:19:24)
+    at async Api.entry (/Users/izilong/Proj/bili/controllers/api/index.js:6:5)
+    at async checkAccess (/Users/izilong/Proj/bili/middleware/checkAccess.js:33:3)
+    at async /Users/izilong/Proj/bili/index.js:69:3 {
+  error_reason: "TypeError: Cannot read property 'length' of undefined",
+  where: '/Users/izilong/Proj/bili/controllers/api/crawler.js:120:16'
+} 
+
+[7/6/2022, 10:40:09 PM] TypeError: Cannot read property 'length' of undefined
+    at Crawler.crawlerData (/Users/izilong/Proj/bili/controllers/api/crawler.js:148:54)
+    at async Api.checkParams (/Users/izilong/Proj/bili/controllers/api/index.js:75:11)
+    at async Api.doCheckParams (/Users/izilong/Proj/bili/controllers/api/index.js:19:24)
+    at async Api.entry (/Users/izilong/Proj/bili/controllers/api/index.js:6:5)
+    at async checkAccess (/Users/izilong/Proj/bili/middleware/checkAccess.js:33:3)
+    at async /Users/izilong/Proj/bili/index.js:69:3 {
+  error_reason: "TypeError: Cannot read property 'length' of undefined",
+  where: '/Users/izilong/Proj/bili/controllers/api/crawler.js:148:54'
+} 
+
+[7/6/2022, 10:42:58 PM] TypeError: Cannot read property 'length' of undefined
+    at Crawler.crawlerData (/Users/izilong/Proj/bili/controllers/api/crawler.js:148:54)
+    at async Api.checkParams (/Users/izilong/Proj/bili/controllers/api/index.js:75:11)
+    at async Api.doCheckParams (/Users/izilong/Proj/bili/controllers/api/index.js:19:24)
+    at async Api.entry (/Users/izilong/Proj/bili/controllers/api/index.js:6:5)
+    at async checkAccess (/Users/izilong/Proj/bili/middleware/checkAccess.js:33:3)
+    at async /Users/izilong/Proj/bili/index.js:69:3 {
+  error_reason: "TypeError: Cannot read property 'length' of undefined",
+  where: '/Users/izilong/Proj/bili/controllers/api/crawler.js:148:54'
+} 
+
