@@ -1,5 +1,6 @@
 const seq = require('../db/mysql')
 const { TEXT, INTEGER, STRING } = require('sequelize');
+const { transferNum } = require('../libs/utils');
 
 const Rookie = seq.define('rookie', {
   img: {
@@ -24,7 +25,10 @@ const Rookie = seq.define('rookie', {
 
   popup_count: {
     type: INTEGER,
-    allowNull: false
+    allowNull: false,
+    set (val) {
+      return this.setDataValue('popup_count', transferNum(val));
+    },
   },
 
   up_name: {
@@ -39,7 +43,10 @@ const Rookie = seq.define('rookie', {
 
   score: {
     type: INTEGER,
-    allowNull: false
+    allowNull: false,
+    set (val) {
+      return this.setDataValue('score', transferNum(val));
+    },
   },
 
   tags: {

@@ -112,7 +112,7 @@ class Crawler {
 
     const model = models[field]
 
-    // console.log('🚀 ~ ~ line 89 ~ data', data, 115)
+    console.log('🚀 ~ ~ line 89 ~ data', data.slice(-1), 115)
 
     let finalRet = null
 

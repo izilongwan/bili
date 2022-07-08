@@ -1,5 +1,6 @@
 const seq = require('../db/mysql')
 const { TEXT, INTEGER, STRING } = require('sequelize');
+const { transferNum } = require('../libs/utils');
 
 const Full = seq.define('full', {
   img: {
@@ -19,12 +20,18 @@ const Full = seq.define('full', {
 
   play_count: {
     type: INTEGER,
-    allowNull: false
+    allowNull: false,
+    set (val) {
+      return this.setDataValue('play_count', transferNum(val));
+    },
   },
 
   popup_count: {
     type: INTEGER,
-    allowNull: false
+    allowNull: false,
+    set (val) {
+      return this.setDataValue('popup_count', transferNum(val));
+    },
   },
 
   up_name: {

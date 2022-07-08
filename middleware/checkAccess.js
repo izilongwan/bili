@@ -23,7 +23,7 @@ module.exports = async function checkAccess(ctx, next) {
           params[key]['access'] = 0 // 无权限
         }
         else {
-          params[key]['access'] = isLogin ? 1 : 1 // 需要登录
+          params[key]['access'] = isLogin ? 1 : -1  // 需要登录
         }
     }
   }

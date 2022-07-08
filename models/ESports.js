@@ -1,5 +1,6 @@
 const seq = require('../db/mysql')
 const { TEXT, INTEGER, STRING } = require('sequelize');
+const { transferNum } = require('../libs/utils');
 
 const ESports = seq.define('e_sports', {
   img: {
@@ -19,12 +20,18 @@ const ESports = seq.define('e_sports', {
 
   thumb_count: {
     type: STRING,
-    allowNull: false
+    allowNull: false,
+    set (val) {
+      return this.setDataValue('thumb_count', transferNum(val));
+    },
   },
 
   play_count: {
     type: STRING,
-    allowNull: false
+    allowNull: false,
+    set (val) {
+      return this.setDataValue('play_count', transferNum(val));
+    },
   },
 
   duration: {

@@ -1,5 +1,6 @@
 const seq = require('../db/mysql')
 const { TEXT, INTEGER, STRING } = require('sequelize');
+const { transferNum } = require('../libs/utils');
 
 const Live = seq.define('live', {
   img: {
@@ -14,7 +15,10 @@ const Live = seq.define('live', {
 
   live_count: {
     type: STRING,
-    allowNull: false
+    allowNull: false,
+    set (val) {
+      return this.setDataValue('live_count', transferNum(val));
+    },
   },
 
   title: {

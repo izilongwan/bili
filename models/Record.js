@@ -1,5 +1,6 @@
 const seq = require('../db/mysql')
 const { TEXT, INTEGER, STRING } = require('sequelize');
+const { transferNum } = require('../libs/utils');
 
 const Record = seq.define('record', {
   img: {
@@ -19,7 +20,10 @@ const Record = seq.define('record', {
 
   play_count: {
     type: INTEGER,
-    allowNull: false
+    allowNull: false,
+    set (val) {
+      return this.setDataValue('play_count', transferNum(val));
+    },
   },
 
   up_name: {

@@ -88,4 +88,39 @@ const crawler = options => async () => {
   })
 }
 
+// const autoScroll = window['puppeteer_pg_autoScroll']
+// const $items = $('.bili-video-card__wrap')
+
+// const getLastCallback = function() {
+//   const $lastItem = $('.bili-video-card__cover .bili-video-card__cover').last()
+//   const lastImgSrc = $lastItem.find('img').prop('src')
+//   return lastImgSrc
+// }
+
+// autoScroll(getLastCallback, 0)
+
+// const result = []
+
+// $items.each((idx, val) => {
+//   const $val = $(val)
+//   const $mid = $val.find('.bili-video-card__mask')
+//   const $bottom = $val.find('.bili-video-card__info--right')
+//   const $img = $val.find('.bili-video-card__cover img')
+
+//   const data = {
+//     img: $img.prop('src'),
+//     title: $bottom.find('.bili-video-card__info--tit').attr('title'),
+//     href: $bottom.find('.hoverZoomMouseover').prop('href'),
+//     up_name: $bottom.find('.bili-video-card__info--author').text(),
+//     play_count: $mid.find('.bili-video-card__stats--text').text(),
+//     tags: '日常记录',
+//   }
+
+//   result.push(data)
+// })
+
+// result
+
+
+
 module.exports = crawler;
